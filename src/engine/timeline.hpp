@@ -57,10 +57,7 @@ class FrameEngine {
     [[nodiscard]] uint32_t getDisplayFrame();
     void incrementFrame(uint32_t count = 1) { m_frame += count; }
     void resetFrame() { setFrame(0); }
-    void setFrame(uint32_t frame) {
-        m_frame = frame;
-        m_portableFrameRemainder = 0.0;
-    }
+    void setFrame(uint32_t frame) { m_frame = frame; }
 
     void calculateSteps(float dt, float targetDt);
     int visualCeiling(int base);
@@ -71,7 +68,8 @@ class FrameEngine {
     void runUpdates(std::function<void(float)> update, float realDt, bool frozen);
     void runFrozenTick();
     void runMobileFrame(std::function<void(float)> update, float realDt);
-    void portableFrameUpdate(PlayLayer* playLayer, float visualDt);
+    void beforeStep(PlayLayer* playLayer);
+    void afterStep(GJBaseGameLayer* level);
     void portableStepUpdate(PlayLayer* playLayer);
     void scheduleFrozenFunction(std::function<void(float)> task) {
         m_frozenScheduledFunctions.push_front(std::move(task));
@@ -94,12 +92,17 @@ class FrameEngine {
     bool m_shouldRender = true;
     double m_timewarpTime = 0.0;
     double m_tpsOverflow = 0.0;
-    double m_portableFrameRemainder = 0.0;
     float m_lastTfp = 0.0f;
 
     int totalStepCount = 0;
     int estimatedStepCount = 1;
     uint32_t m_stepLimit = 1;
+
+    // Diagnostics for the macOS TPS log: which runner drove the last update,
+    // how many steps it asked for, and the tick count the game actually got.
+    int m_diagPath = 0;
+    int m_diagSteps = 0;
+    int m_diagForced = 0;
     
     
     int m_forcedTicks = 1;

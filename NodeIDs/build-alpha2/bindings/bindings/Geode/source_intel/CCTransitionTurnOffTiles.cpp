@@ -1,0 +1,68 @@
+#include <Geode/cocos/cocoa/CCObject.h>
+
+#include <stdexcept>
+#include <Geode/utils/addresser.hpp>
+#include <Geode/modify/Traits.hpp>
+#include <Geode/loader/Tulip.hpp>
+#include <Geode/mapping/CCTransitionTurnOffTiles.hpp>
+#include <Geode/cocos/kazmath/include/kazmath/kazmath.h>
+
+using namespace geode;
+using namespace geode::modifier;
+
+#if !defined(GEODE_WRAP_FUNCTION)
+#define GEODE_WRAP_FUNCTION
+template <class F>
+static auto wrapFunction(uintptr_t address, tulip::hook::TulipConvention convention) {
+	auto wrapped = geode::hook::createWrapper(reinterpret_cast<void*>(address), tulip::hook::WrapperMetadata{
+		.m_convention = geode::hook::createConvention(convention),
+		.m_abstract = tulip::hook::AbstractFunction::from(F(nullptr)),
+	});
+	if (wrapped.isErr()) {
+		throw std::runtime_error(wrapped.unwrapErr());
+	}
+	return wrapped.unwrap();
+}
+#endif
+
+cocos2d::CCTransitionTurnOffTiles::~CCTransitionTurnOffTiles() {
+	// basically we destruct it once by calling the gd function,
+	// then lock it, so that other gd destructors dont get called
+	if (!geode::DestructorLock::isLocked(this)) {
+		using FunctionType = void(*)(cocos2d::CCTransitionTurnOffTiles*);
+		static auto func = wrapFunction<FunctionType>(base::get() + 0xa8700, tulip::hook::TulipConvention::Default);
+		reinterpret_cast<FunctionType>(func)(this);
+
+		// we need to construct it back so that it uhhh ummm doesnt crash
+		// while going to the child destructors
+		auto thing = new (this) cocos2d::CCTransitionTurnOffTiles(geode::CutoffConstructor, sizeof(cocos2d::CCTransitionTurnOffTiles));
+		geode::DestructorLock::addLock(this);
+	}
+}
+
+auto cocos2d::CCTransitionTurnOffTiles::create(float p0, cocos2d::CCScene* p1) -> decltype(create(p0, p1)) {
+	using FunctionType = decltype(create(p0, p1))(*)(float, cocos2d::CCScene*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0xa7fb0, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(p0, p1);
+}
+
+auto cocos2d::CCTransitionTurnOffTiles::onEnter() -> decltype(onEnter()) {
+	auto self = addresser::thunkAdjust(Resolve<>::func(&cocos2d::CCTransitionTurnOffTiles::onEnter), this);
+	using FunctionType = decltype(onEnter())(*)(cocos2d::CCTransitionTurnOffTiles*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0xa8050, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(self);
+}
+
+auto cocos2d::CCTransitionTurnOffTiles::sceneOrder() -> decltype(sceneOrder()) {
+	auto self = addresser::thunkAdjust(Resolve<>::func(&cocos2d::CCTransitionTurnOffTiles::sceneOrder), this);
+	using FunctionType = decltype(sceneOrder())(*)(cocos2d::CCTransitionTurnOffTiles*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0xa8040, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(self);
+}
+
+auto cocos2d::CCTransitionTurnOffTiles::easeActionWithAction(cocos2d::CCActionInterval* p0) -> decltype(easeActionWithAction(p0)) {
+	auto self = addresser::thunkAdjust(Resolve<cocos2d::CCActionInterval*>::func(&cocos2d::CCTransitionTurnOffTiles::easeActionWithAction), this);
+	using FunctionType = decltype(easeActionWithAction(p0))(*)(cocos2d::CCTransitionTurnOffTiles*, cocos2d::CCActionInterval*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0xa8150, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(self, p0);
+}

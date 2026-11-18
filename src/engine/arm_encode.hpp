@@ -28,6 +28,10 @@ constexpr uint32_t a64LoadSingle(unsigned rt, unsigned rn, unsigned offset) {
     return 0xBD400000u | ((offset / 4u) << 10) | (rn << 5) | rt;
 }
 
+constexpr uint32_t a64LoadDouble(unsigned rt, unsigned rn, unsigned offset) {
+    return 0xFD400000u | ((offset / 8u) << 10) | (rn << 5) | rt;
+}
+
 constexpr uint32_t a64Branch(uint64_t from, uint64_t to) {
     const int64_t words = (static_cast<int64_t>(to) -
                            static_cast<int64_t>(from)) / 4;
@@ -84,6 +88,18 @@ constexpr std::array<uint8_t, 24> a64WordTickLoad(uint64_t patchAt,
     a64LoadAddress(out, A64_SCRATCH, cell);
     out.word(a64LoadWord(0, A64_SCRATCH, 0));
     out.word(a64Branch(patchAt + out.m_size, resumeAt));
+    return out.m_bytes;
+}
+
+// Replaces the vanilla accounting-timestep selection (ts = 1/240, warp-scaled)
+// with two doubles written by the mod: [0] = warp, [1] = the mod's timestep.
+// d2 keeps the warp (consumed later), d1 becomes the timestep.
+constexpr std::array<uint8_t, 36> a64TickRateLoad(uint64_t cell) {
+    Emitter<36> out;
+    a64LoadAddress(out, A64_SCRATCH, cell);
+    out.word(a64LoadDouble(2, A64_SCRATCH, 0));
+    out.word(a64LoadDouble(1, A64_SCRATCH, 8));
+    out.padA64();
     return out.m_bytes;
 }
 

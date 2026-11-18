@@ -37,32 +37,6 @@ namespace {
 using Update = std::function<void(float)>;
 using Clock = std::chrono::high_resolution_clock;
 
-constexpr uint32_t MAX_FRAMES_PER_DRAW = 1000;
-constexpr double ROUND_UP_FROM = 0.99999;
-
-constexpr uint32_t takeWholeFrames(double gained, double& carry) {
-    const double total = gained + carry;
-    if (total >= MAX_FRAMES_PER_DRAW) {
-        carry = 0.0;
-        return MAX_FRAMES_PER_DRAW;
-    }
-    uint32_t whole = static_cast<uint32_t>(total);
-    carry = total - whole;
-    if (carry > ROUND_UP_FROM) {
-        carry = 0.0;
-        ++whole;
-    }
-    return whole;
-}
-
-static_assert([] {
-    double carry = 0.0;
-    const bool first = takeWholeFrames(0.25, carry) == 0;
-    const bool second = takeWholeFrames(0.25, carry) == 0;
-    const bool third = takeWholeFrames(0.50, carry) == 1;
-    return first && second && third && carry == 0.0;
-}());
-
 GrapeEngine& bot() { return *GrapeEngine::get(); }
 
 bool wantsFrameHistory() {
@@ -89,9 +63,17 @@ void runToNextInputs(float realDt, const Update& update) {
 
     timeline.calculateSteps(scaledRealDt(realDt), timeline.getPhysicsDt());
     const double tick = timeline.getPhysicsDt();
+    timeline.m_diagPath = 2;
+    timeline.m_diagSteps = timeline.estimatedStepCount;
 
     if (!director.m_head.peek()) {
-        if (timeline.estimatedStepCount >= 1) update(tick * timeline.estimatedStepCount);
+        if (timeline.estimatedStepCount >= 1) {
+            // The tick-count patch reads m_forcedTicks: without setting it the
+            // game runs ONE step of the whole batch delta and high TPS collapses.
+            timeline.m_forcedTicks = timeline.estimatedStepCount;
+            update(static_cast<float>(tick * timeline.estimatedStepCount));
+            timeline.m_forcedTicks = 1;
+        }
         return;
     }
 
@@ -138,6 +120,8 @@ void runPaced(float realDt, const Update& update, bool followScroll) {
     const float tick = static_cast<float>(timeline.getPhysicsDt());
     const float scrolled = distanceTicked(level);
     timeline.calculateSteps(static_cast<float>(scaledRealDt(realDt)), followScroll ? scrolled : tick);
+    timeline.m_diagPath = 1;
+    timeline.m_diagSteps = timeline.estimatedStepCount;
 
     if (grape::ticks::patched() && !followScroll) {
         
@@ -167,6 +151,8 @@ void runPaced(float realDt, const Update& update, bool followScroll) {
 void runFree(float realDt, const Update& update, GJBaseGameLayer* level) {
     auto& timeline = bot().timeline();
     timeline.m_shouldRender = true;
+    timeline.m_diagPath = 3;
+    timeline.m_diagSteps = 1;
     if (timeline.m_respawnTimer > 0) {
         timeline.m_tpsOverflow = 0.0;
         level->m_extraDelta = 0.0;
@@ -291,13 +277,28 @@ void FrameEngine::runUpdates(std::function<void(float)> update, float realDt, bo
         m_respawnTimer = 0;
         if (!consumeStep()) return;
         m_shouldRender = true;
-        
-        
-        
-        
-        const double stepTime = grape::ticks::timestep(
-            240.0, play->m_gameState.m_timeWarp);
+        m_diagPath = 4;
+        m_diagSteps = 1;
+        // One physics frame at the configured TPS when the tick patch can
+        // force the exact count; vanilla otherwise only steps on 240 Hz.
+        const double stepTime = grape::ticks::patched()
+            ? grape::ticks::timestep(m_tps->inner(),
+                                     play->m_gameState.m_timeWarp)
+            : grape::ticks::timestep(240.0, play->m_gameState.m_timeWarp);
         update(static_cast<float>(stepTime));
+#ifdef GEODE_IS_MACOS
+        {
+            static double lastSample = 0.0;
+            const double now = std::chrono::duration<double>(
+                std::chrono::steady_clock::now().time_since_epoch()).count();
+            if (now - lastSample >= 1.0) {
+                lastSample = now;
+                geode::log::info(
+                    "[grape-tps] frameAdvance stepTime={:.6f} forced={} tps={:g}",
+                    stepTime, m_diagForced, m_tps->inner());
+            }
+        }
+#endif
         bot().labels().update(renderer->isRecording());
         bot().trajectory().update(PlayLayer::get());
         return;
@@ -324,12 +325,13 @@ void FrameEngine::runUpdates(std::function<void(float)> update, float realDt, bo
             std::chrono::steady_clock::now().time_since_epoch()).count();
         if (now - lastSample >= 1.0) {
             const uint64_t frame = getFrame();
+            const uint64_t rate = frame >= lastFrame ? frame - lastFrame : 0;
             geode::log::info(
                 "[grape-tps] tps={:g} physicsDt={:.6f} steps={} frameRate={} "
-                "paused={} realTime={} lockDelta={}",
+                "paused={} realTime={} lockDelta={} path={} diagSteps={} forced={}",
                 m_tps->inner(), getPhysicsDt(), totalStepCount,
-                frame - lastFrame, isPaused(), m_realTime->inner(),
-                m_lockDelta->inner());
+                rate, isPaused(), m_realTime->inner(),
+                m_lockDelta->inner(), m_diagPath, m_diagSteps, m_diagForced);
             lastSample = now;
             lastFrame = frame;
         }
@@ -339,10 +341,14 @@ void FrameEngine::runUpdates(std::function<void(float)> update, float realDt, bo
 
 void FrameEngine::runFrozenTick() {
     if (m_frozenScheduledFunctions.empty()) return;
-    for (auto& scheduled : m_frozenScheduledFunctions) scheduled(0.0f);
+    // Move the queue out before running: tasks scheduled during the tick (the
+    // refresh pass runs a zero-delta game step, which can queue more work) must
+    // survive to the next tick instead of being wiped by the clear below.
+    auto scheduled = std::move(m_frozenScheduledFunctions);
+    m_frozenScheduledFunctions.clear();
+    for (auto& task : scheduled) task(0.0f);
     runUpdates([](float dt) { CCDirector::sharedDirector()->getScheduler()->update(dt); },
                0.0f, true);
-    m_frozenScheduledFunctions.clear();
 }
 
 void FrameEngine::breakLoop() {
@@ -434,26 +440,24 @@ void FrameEngine::findBestFrameCandidate() {
     m_predicting = false;
 }
 
-void FrameEngine::portableFrameUpdate(PlayLayer* playLayer, float visualDt) {
-    if (!playLayer || !bot().isEnabled() || m_onlyRefresh || playLayer->m_resumeTimer > 0) return;
+void FrameEngine::beforeStep(PlayLayer* playLayer) {
+    if (!playLayer || m_onlyRefresh) return;
+    if (!playLayer->m_playerDied && wantsFrameHistory()) keepHistoryFrame(playLayer);
+}
 
-    if (!playLayer->m_playerDied) {
-        uint32_t frames = 1;
-        if (m_paused->inner()) {
-            m_portableFrameRemainder = 0.0;
-        } else {
-            const double gained = m_tps->inner() * visualDt;
-            if (!std::isfinite(gained) || gained <= 0.0) return;
-            frames = takeWholeFrames(gained, m_portableFrameRemainder);
-            if (frames == 0) return;
-        }
-        if (wantsFrameHistory()) keepHistoryFrame(playLayer);
-        incrementFrame(frames);
-        bot().hitboxes().saveToTrail(playLayer);
+void FrameEngine::afterStep(GJBaseGameLayer* level) {
+    if (!bot().isEnabled()) return;
+    if (!level || level->m_resumeTimer > 0) return;
+
+    auto* play = PlayLayer::get();
+    if (!level->m_playerDied) {
+        if (play) incrementFrame();
+        bot().hitboxes().saveToTrail(level);
     }
-
-    bot().autoclicker().update(playLayer);
-    bot().pathfinder().update(playLayer);
+    if (play) {
+        bot().autoclicker().update(play);
+        bot().pathfinder().update(play);
+    }
 }
 
 void FrameEngine::portableStepUpdate(PlayLayer* playLayer) {

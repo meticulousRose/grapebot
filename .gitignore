@@ -16,6 +16,7 @@
 /bindings/
 /cpm-cache/
 /bot_venv/
+/NodeIDs/
 
 *.geode
 *.zip

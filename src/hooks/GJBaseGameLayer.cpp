@@ -22,6 +22,7 @@
 #include "features/death_guard.hpp"
 #include "engine/engine.hpp"
 #include "engine/tick_patch.hpp"
+#include "engine/tick_plan.hpp"
 #include "engine/timeline.hpp"
 #include "physics/collisions.hpp"
 #include "physics/gjbasegamelayer.hpp"
@@ -31,7 +32,6 @@
 #include "util/input_trace.hpp"
 #ifdef GEODE_IS_MOBILE
 #include "engine/tick_patch.hpp"
-#include "engine/tick_plan.hpp"
 #include "render/renderer.hpp"
 #endif
 #if defined(GEODE_IS_MOBILE)
@@ -699,8 +699,22 @@ struct GrapeGJBaseGameLayer : Modify<GrapeGJBaseGameLayer, GJBaseGameLayer> {
 #else
     void update(float dt) override {
         auto& timeline = GrapeEngine::get()->timeline();
-        if (timeline.m_onlyRefresh || !GrapeEngine::get()->isEnabled())
+        if (timeline.m_onlyRefresh || !GrapeEngine::get()->isEnabled()) {
+            // With the tick patch installed the game always reads its step count
+            // from the patched cell (echo does the same), so it has to be
+            // refreshed on every update call even when the bot is not driving.
+            // Leaving it stale (0 on first launch) freezes normal gameplay.
+            if (grape::ticks::patched()) {
+                const auto vanilla = grape::ticks::vanilla(
+                    dt, 0.0, grape::ticks::timestep(240.0, m_gameState.m_timeWarp));
+                grape::ticks::setCount(std::max(vanilla.m_steps, 1));
+                // Vanilla accounting when the bot is off; leave the mod's rate
+                // alone during refresh passes so the TPS-grid leftover survives.
+                if (!GrapeEngine::get()->isEnabled())
+                    grape::ticks::setTickRate(240.0, m_gameState.m_timeWarp);
+            }
             return GJBaseGameLayer::update(dt);
+        }
 
         if (!timeline.isLockDelta() || !PlayLayer::get())
             timeline.calculateSteps(dt, timeline.getPhysicsDt());
@@ -719,11 +733,30 @@ struct GrapeGJBaseGameLayer : Modify<GrapeGJBaseGameLayer, GJBaseGameLayer> {
         
         
         
-        if (grape::ticks::patched())
+        if (grape::ticks::patched()) {
+            timeline.m_diagForced = timeline.m_forcedTicks;
             grape::ticks::setCount(timeline.m_forcedTicks);
+            grape::ticks::setTickRate(timeline.m_tps->inner(),
+                                      m_gameState.m_timeWarp);
+        }
         GJBaseGameLayer::update(dt);
         snapshotVisualAnchors();
     }
+
+#ifdef GEODE_IS_MACOS
+    void processCommands(float dt, bool isHalfTick, bool isLastTick) {
+        // macOS runs the game's whole step loop inside one update() call, so
+        // per-frame hooks land at the wrong granularity. Count frames and keep
+        // the practice-fix history per physics step, like the Windows midhooks.
+        auto* bot = GrapeEngine::get();
+        auto* play = PlayLayer::get();
+        const bool driving = bot->isEnabled() && !bot->timeline().m_onlyRefresh &&
+                             play == static_cast<GJBaseGameLayer*>(this);
+        if (driving) bot->timeline().beforeStep(play);
+        GJBaseGameLayer::processCommands(dt, isHalfTick, isLastTick);
+        if (driving) bot->timeline().afterStep(this);
+    }
+#endif
 #endif
 
     void gameEventTriggered(GJGameEvent event, int first, int second) {

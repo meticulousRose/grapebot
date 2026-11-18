@@ -62,18 +62,33 @@ void discardCheckpoint(PlayLayer* layer, CheckpointObject* checkpoint) {
 }
 
 struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
-#ifdef GEODE_IS_MACOS
-    void postUpdate(float dt) override {
-        PlayLayer::postUpdate(dt);
-        bot().timeline().portableFrameUpdate(this, dt);
-    }
-#endif
+    struct Fields {
+        uint64_t m_checkpointQueuedFrame = static_cast<uint64_t>(-1);
+    };
 
     CheckpointObject* markCheckpoint() {
         if (!bot().isEnabled()) return PlayLayer::markCheckpoint();
+#ifdef GEODE_IS_MACOS
+        // GD asks for checkpoints mid-step, and the Z-key path can race the
+        // physics thread, so the snapshot lands a frame off from what is on
+        // screen and can catch half-updated velocity. Place it at the frozen
+        // tick (right after the frame renders) like the Windows queueCheckpoint
+        // detour. Dedupe by frame so a lost callback can never wedge placement.
+        const uint64_t frame = bot().timeline().getFrame();
+        if (m_fields->m_checkpointQueuedFrame == frame) return nullptr;
+        if (grape::snap::deathBlocksCheckpoint(this)) return nullptr;
+        m_fields->m_checkpointQueuedFrame = frame;
+        bot().timeline().scheduleFrozenFunction([this](float) {
+            if (!bot().isEnabled() || PlayLayer::get() != this) return;
+            if (grape::snap::deathBlocksCheckpoint(this)) return;
+            PlayLayer::markCheckpoint();
+        });
+        return nullptr;
+#else
         CheckpointObject* checkpoint = createCheckpoint();
         storeCheckpoint(checkpoint);
         return checkpoint;
+#endif
     }
 
     void storeCheckpoint(CheckpointObject* checkpoint) {

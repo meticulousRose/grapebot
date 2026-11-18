@@ -1,0 +1,66 @@
+#include <Geode/cocos/cocoa/CCObject.h>
+
+#include <stdexcept>
+#include <Geode/utils/addresser.hpp>
+#include <Geode/modify/Traits.hpp>
+#include <Geode/loader/Tulip.hpp>
+#include <Geode/binding/CheckpointObject.hpp>
+#include <Geode/cocos/kazmath/include/kazmath/kazmath.h>
+
+using namespace geode;
+using namespace geode::modifier;
+
+#if !defined(GEODE_WRAP_FUNCTION)
+#define GEODE_WRAP_FUNCTION
+template <class F>
+static auto wrapFunction(uintptr_t address, tulip::hook::TulipConvention convention) {
+	auto wrapped = geode::hook::createWrapper(reinterpret_cast<void*>(address), tulip::hook::WrapperMetadata{
+		.m_convention = geode::hook::createConvention(convention),
+		.m_abstract = tulip::hook::AbstractFunction::from(F(nullptr)),
+	});
+	if (wrapped.isErr()) {
+		throw std::runtime_error(wrapped.unwrapErr());
+	}
+	return wrapped.unwrap();
+}
+#endif
+
+CheckpointObject::CheckpointObject() : CheckpointObject(geode::CutoffConstructor, sizeof(CheckpointObject)) {
+	// here we construct it as normal as we can, then destruct it
+	// using the generated functions. this ensures no memory gets leaked
+	// no crashes :pray:
+	geode::DestructorLock::addLock(this);
+	CheckpointObject::~CheckpointObject();
+
+	using FunctionType = void(*)(CheckpointObject*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x540d6c, tulip::hook::TulipConvention::Default);
+	reinterpret_cast<FunctionType>(func)(this);
+}
+
+CheckpointObject::~CheckpointObject() {
+	// basically we destruct it once by calling the gd function,
+	// then lock it, so that other gd destructors dont get called
+	if (!geode::DestructorLock::isLocked(this)) {
+		using FunctionType = void(*)(CheckpointObject*);
+		static auto func = wrapFunction<FunctionType>(base::get() + 0x529440, tulip::hook::TulipConvention::Default);
+		reinterpret_cast<FunctionType>(func)(this);
+
+		// we need to construct it back so that it uhhh ummm doesnt crash
+		// while going to the child destructors
+		auto thing = new (this) CheckpointObject(geode::CutoffConstructor, sizeof(CheckpointObject));
+		geode::DestructorLock::addLock(this);
+	}
+}
+
+auto CheckpointObject::create() -> decltype(create()) {
+	using FunctionType = decltype(create())(*)();
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x529604, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)();
+}
+
+auto CheckpointObject::init() -> decltype(init()) {
+	auto self = addresser::thunkAdjust(Resolve<>::func(&CheckpointObject::init), this);
+	using FunctionType = decltype(init())(*)(CheckpointObject*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x529684, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(self);
+}

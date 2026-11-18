@@ -3,7 +3,9 @@
 #include <Geode/Geode.hpp>
 
 #if defined(GEODE_IS_MOBILE) || defined(GEODE_IS_MACOS)
+#include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <span>
 #include <vector>
 
@@ -29,6 +31,11 @@ Cell g_cell = 0;
 Cell* g_target = &g_cell;
 bool g_patched = false;
 bool g_tried = false;
+
+// Written by setTickRate, read by the patched accounting block:
+// [0] = warp (the vanilla code converted this from the layer's float),
+// [1] = the timestep the delta accounting quantizes to.
+double g_tickTime[2] = {1.0, 1.0 / 240.0};
 
 using arm::ANY;
 
@@ -58,20 +65,46 @@ uintptr_t updateAddress() {
 
 constexpr uintptr_t MAC_UPDATE = 0x10663c;
 
+// The delta-accounting timestep selection inside update(): ts = warp < 1
+// ? warp / 240 : 1 / 240. Replaced with two mod-written doubles so the
+// accounting quantizes to the mod's TPS instead of vanilla's 240 Hz.
+constexpr uintptr_t MAC_TICK_RATE = 0x1068a0;
+constexpr std::array<uint8_t, 36> MAC_TICK_RATE_ORIGINAL = {
+    0x61, 0x32, 0x43, 0xbd, 0x22, 0xc0, 0x22, 0x1e, 0xe9, 0xe3, 0x00,
+    0xb2, 0x29, 0xee, 0xe7, 0xf2, 0x23, 0x01, 0x67, 0x9e, 0x44, 0x08,
+    0x63, 0x1e, 0x05, 0x10, 0x2e, 0x1e, 0x20, 0x20, 0x25, 0x1e, 0x81,
+    0x4c, 0x63, 0x1e};
+
 bool installPlatform() {
     const uintptr_t base = geode::base::get();
     if (!base) return false;
-    
-    
-    
+
+
+
     constexpr int16_t roundSite[] = {0x01, 0x10, 0x2E, 0x1E, 0x00, 0x20,
                                      0x21, 0x1E, 0x20, 0xAC, 0x20, 0x1E};
     const auto found =
         arm::findMasked(codeWindow(base + MAC_UPDATE, 0x400), roundSite);
     if (!found) return false;
-    return applyPatch(base + MAC_UPDATE + *found,
-                      arm::a64SingleTickLoad(
-                          reinterpret_cast<uintptr_t>(&g_cell)));
+    const bool patchedCount =
+        applyPatch(base + MAC_UPDATE + *found,
+                   arm::a64SingleTickLoad(
+                       reinterpret_cast<uintptr_t>(&g_cell)));
+
+    // Accounting timestep: verify the original bytes first so a game update
+    // can never get a blind write. Without it the tick count still works, but
+    // deltas quantize to 240 Hz (frame advance and non-integer steps/frame
+    // drift at high TPS).
+    const auto* rateSite =
+        reinterpret_cast<const uint8_t*>(base + MAC_TICK_RATE);
+    if (std::memcmp(rateSite, MAC_TICK_RATE_ORIGINAL.data(), 36) == 0) {
+        applyPatch(base + MAC_TICK_RATE,
+                   arm::a64TickRateLoad(
+                       reinterpret_cast<uintptr_t>(&g_tickTime)));
+    } else {
+        geode::log::warn("Tick rate site mismatch; delta accounting stays at 240 Hz");
+    }
+    return patchedCount;
 }
 #elif defined(GEODE_IS_ANDROID64)
 bool installPlatform() {
@@ -154,11 +187,19 @@ void setCount(int ticks) {
     *g_target = static_cast<Cell>(ticks < 0 ? 0 : ticks);
 }
 
+void setTickRate(double tps, double warp) {
+    if (!(tps > 0.0) || !std::isfinite(tps)) tps = 240.0;
+    if (!std::isfinite(warp) || warp <= 0.0) warp = 1.0;
+    g_tickTime[0] = warp;
+    g_tickTime[1] = warp < 1.0 ? warp / tps : 1.0 / tps;
+}
+
 #else
 
 bool install() { return false; }
 bool patched() { return false; }
 void setCount(int) {}
+void setTickRate(double, double) {}
 
 #endif
 

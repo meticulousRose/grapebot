@@ -1,0 +1,62 @@
+
+#include <stdexcept>
+#include <Geode/utils/addresser.hpp>
+#include <Geode/modify/Traits.hpp>
+#include <Geode/loader/Tulip.hpp>
+#include <Geode/binding/SetupSequenceTriggerPopup.hpp>
+#include <Geode/cocos/kazmath/include/kazmath/kazmath.h>
+
+using namespace geode;
+using namespace geode::modifier;
+
+#if !defined(GEODE_WRAP_FUNCTION)
+#define GEODE_WRAP_FUNCTION
+template <class F>
+static auto wrapFunction(uintptr_t address, tulip::hook::TulipConvention convention) {
+	auto wrapped = geode::hook::createWrapper(reinterpret_cast<void*>(address), tulip::hook::WrapperMetadata{
+		.m_convention = geode::hook::createConvention(convention),
+		.m_abstract = tulip::hook::AbstractFunction::from(F(nullptr)),
+	});
+	if (wrapped.isErr()) {
+		throw std::runtime_error(wrapped.unwrapErr());
+	}
+	return wrapped.unwrap();
+}
+#endif
+
+auto SetupSequenceTriggerPopup::onCustomToggleTriggerValue(cocos2d::CCObject* sender) -> decltype(onCustomToggleTriggerValue(sender)) {
+	auto self = addresser::thunkAdjust(Resolve<cocos2d::CCObject*>::func(&SetupSequenceTriggerPopup::onCustomToggleTriggerValue), this);
+	using FunctionType = decltype(onCustomToggleTriggerValue(sender))(*)(SetupSequenceTriggerPopup*, cocos2d::CCObject*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x4d9c60, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(self, sender);
+}
+
+auto SetupSequenceTriggerPopup::onAddChance(cocos2d::CCObject* sender) -> decltype(onAddChance(sender)) {
+	using FunctionType = decltype(onAddChance(sender))(*)(SetupSequenceTriggerPopup*, cocos2d::CCObject*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x4d9780, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(this, sender);
+}
+
+auto SetupSequenceTriggerPopup::onChangeOrder(cocos2d::CCObject* sender) -> decltype(onChangeOrder(sender)) {
+	using FunctionType = decltype(onChangeOrder(sender))(*)(SetupSequenceTriggerPopup*, cocos2d::CCObject*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x4d9870, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(this, sender);
+}
+
+auto SetupSequenceTriggerPopup::onDeleteSelected(cocos2d::CCObject* sender) -> decltype(onDeleteSelected(sender)) {
+	using FunctionType = decltype(onDeleteSelected(sender))(*)(SetupSequenceTriggerPopup*, cocos2d::CCObject*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x4d9820, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(this, sender);
+}
+
+auto SetupSequenceTriggerPopup::onSelect(cocos2d::CCObject* sender) -> decltype(onSelect(sender)) {
+	using FunctionType = decltype(onSelect(sender))(*)(SetupSequenceTriggerPopup*, cocos2d::CCObject*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x4d9d60, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(this, sender);
+}
+
+auto SetupSequenceTriggerPopup::updateGroupIDButtons() -> decltype(updateGroupIDButtons()) {
+	using FunctionType = decltype(updateGroupIDButtons())(*)(SetupSequenceTriggerPopup*);
+	static auto func = wrapFunction<FunctionType>(base::get() + 0x4d9910, tulip::hook::TulipConvention::Default);
+	return reinterpret_cast<FunctionType>(func)(this);
+}

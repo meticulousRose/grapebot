@@ -1,0 +1,262 @@
+#pragma once
+#include <Geode/modify/Modify.hpp>
+#include <Geode/modify/Field.hpp>
+#include <Geode/binding/GJScaleControl.hpp>
+using namespace geode::modifier;
+namespace geode::modifier {
+    
+	#ifndef GEODE_STATICS_create
+		#define GEODE_STATICS_create
+		GEODE_AS_STATIC_FUNCTION(create) 
+	#endif
+
+	#ifndef GEODE_STATICS_init
+		#define GEODE_STATICS_init
+		GEODE_AS_STATIC_FUNCTION(init) 
+	#endif
+
+	#ifndef GEODE_STATICS_ccTouchBegan
+		#define GEODE_STATICS_ccTouchBegan
+		GEODE_AS_STATIC_FUNCTION(ccTouchBegan) 
+	#endif
+
+	#ifndef GEODE_STATICS_ccTouchMoved
+		#define GEODE_STATICS_ccTouchMoved
+		GEODE_AS_STATIC_FUNCTION(ccTouchMoved) 
+	#endif
+
+	#ifndef GEODE_STATICS_ccTouchEnded
+		#define GEODE_STATICS_ccTouchEnded
+		GEODE_AS_STATIC_FUNCTION(ccTouchEnded) 
+	#endif
+
+	#ifndef GEODE_STATICS_ccTouchCancelled
+		#define GEODE_STATICS_ccTouchCancelled
+		GEODE_AS_STATIC_FUNCTION(ccTouchCancelled) 
+	#endif
+
+	#ifndef GEODE_STATICS_applyFocusedInput
+		#define GEODE_STATICS_applyFocusedInput
+		GEODE_AS_STATIC_FUNCTION(applyFocusedInput) 
+	#endif
+
+	#ifndef GEODE_STATICS_createScaleInput
+		#define GEODE_STATICS_createScaleInput
+		GEODE_AS_STATIC_FUNCTION(createScaleInput) 
+	#endif
+
+	#ifndef GEODE_STATICS_finishTouch
+		#define GEODE_STATICS_finishTouch
+		GEODE_AS_STATIC_FUNCTION(finishTouch) 
+	#endif
+
+	#ifndef GEODE_STATICS_hasActiveInput
+		#define GEODE_STATICS_hasActiveInput
+		GEODE_AS_STATIC_FUNCTION(hasActiveInput) 
+	#endif
+
+	#ifndef GEODE_STATICS_loadValues
+		#define GEODE_STATICS_loadValues
+		GEODE_AS_STATIC_FUNCTION(loadValues) 
+	#endif
+
+	#ifndef GEODE_STATICS_onApplyScale
+		#define GEODE_STATICS_onApplyScale
+		GEODE_AS_STATIC_FUNCTION(onApplyScale) 
+	#endif
+
+	#ifndef GEODE_STATICS_onToggleLockScale
+		#define GEODE_STATICS_onToggleLockScale
+		GEODE_AS_STATIC_FUNCTION(onToggleLockScale) 
+	#endif
+
+	#ifndef GEODE_STATICS_releaseInputFocus
+		#define GEODE_STATICS_releaseInputFocus
+		GEODE_AS_STATIC_FUNCTION(releaseInputFocus) 
+	#endif
+
+	#ifndef GEODE_STATICS_scaleFromValue
+		#define GEODE_STATICS_scaleFromValue
+		GEODE_AS_STATIC_FUNCTION(scaleFromValue) 
+	#endif
+
+	#ifndef GEODE_STATICS_skewFromValue
+		#define GEODE_STATICS_skewFromValue
+		GEODE_AS_STATIC_FUNCTION(skewFromValue) 
+	#endif
+
+	#ifndef GEODE_STATICS_sliderChanged
+		#define GEODE_STATICS_sliderChanged
+		GEODE_AS_STATIC_FUNCTION(sliderChanged) 
+	#endif
+
+	#ifndef GEODE_STATICS_updateLabelX
+		#define GEODE_STATICS_updateLabelX
+		GEODE_AS_STATIC_FUNCTION(updateLabelX) 
+	#endif
+
+	#ifndef GEODE_STATICS_updateLabelXY
+		#define GEODE_STATICS_updateLabelXY
+		GEODE_AS_STATIC_FUNCTION(updateLabelXY) 
+	#endif
+
+	#ifndef GEODE_STATICS_updateLabelY
+		#define GEODE_STATICS_updateLabelY
+		GEODE_AS_STATIC_FUNCTION(updateLabelY) 
+	#endif
+
+	#ifndef GEODE_STATICS_valueFromScale
+		#define GEODE_STATICS_valueFromScale
+		GEODE_AS_STATIC_FUNCTION(valueFromScale) 
+	#endif
+
+	#ifndef GEODE_STATICS_valueFromSkew
+		#define GEODE_STATICS_valueFromSkew
+		GEODE_AS_STATIC_FUNCTION(valueFromSkew) 
+	#endif
+
+    
+	#ifndef GEODE_CONCEPT_CHECK_create
+		#define GEODE_CONCEPT_CHECK_create
+		GEODE_CONCEPT_FUNCTION_CHECK(create) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_init
+		#define GEODE_CONCEPT_CHECK_init
+		GEODE_CONCEPT_FUNCTION_CHECK(init) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_ccTouchBegan
+		#define GEODE_CONCEPT_CHECK_ccTouchBegan
+		GEODE_CONCEPT_FUNCTION_CHECK(ccTouchBegan) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_ccTouchMoved
+		#define GEODE_CONCEPT_CHECK_ccTouchMoved
+		GEODE_CONCEPT_FUNCTION_CHECK(ccTouchMoved) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_ccTouchEnded
+		#define GEODE_CONCEPT_CHECK_ccTouchEnded
+		GEODE_CONCEPT_FUNCTION_CHECK(ccTouchEnded) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_ccTouchCancelled
+		#define GEODE_CONCEPT_CHECK_ccTouchCancelled
+		GEODE_CONCEPT_FUNCTION_CHECK(ccTouchCancelled) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_applyFocusedInput
+		#define GEODE_CONCEPT_CHECK_applyFocusedInput
+		GEODE_CONCEPT_FUNCTION_CHECK(applyFocusedInput) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_createScaleInput
+		#define GEODE_CONCEPT_CHECK_createScaleInput
+		GEODE_CONCEPT_FUNCTION_CHECK(createScaleInput) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_finishTouch
+		#define GEODE_CONCEPT_CHECK_finishTouch
+		GEODE_CONCEPT_FUNCTION_CHECK(finishTouch) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_hasActiveInput
+		#define GEODE_CONCEPT_CHECK_hasActiveInput
+		GEODE_CONCEPT_FUNCTION_CHECK(hasActiveInput) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_loadValues
+		#define GEODE_CONCEPT_CHECK_loadValues
+		GEODE_CONCEPT_FUNCTION_CHECK(loadValues) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_onApplyScale
+		#define GEODE_CONCEPT_CHECK_onApplyScale
+		GEODE_CONCEPT_FUNCTION_CHECK(onApplyScale) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_onToggleLockScale
+		#define GEODE_CONCEPT_CHECK_onToggleLockScale
+		GEODE_CONCEPT_FUNCTION_CHECK(onToggleLockScale) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_releaseInputFocus
+		#define GEODE_CONCEPT_CHECK_releaseInputFocus
+		GEODE_CONCEPT_FUNCTION_CHECK(releaseInputFocus) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_scaleFromValue
+		#define GEODE_CONCEPT_CHECK_scaleFromValue
+		GEODE_CONCEPT_FUNCTION_CHECK(scaleFromValue) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_skewFromValue
+		#define GEODE_CONCEPT_CHECK_skewFromValue
+		GEODE_CONCEPT_FUNCTION_CHECK(skewFromValue) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_sliderChanged
+		#define GEODE_CONCEPT_CHECK_sliderChanged
+		GEODE_CONCEPT_FUNCTION_CHECK(sliderChanged) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_updateLabelX
+		#define GEODE_CONCEPT_CHECK_updateLabelX
+		GEODE_CONCEPT_FUNCTION_CHECK(updateLabelX) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_updateLabelXY
+		#define GEODE_CONCEPT_CHECK_updateLabelXY
+		GEODE_CONCEPT_FUNCTION_CHECK(updateLabelXY) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_updateLabelY
+		#define GEODE_CONCEPT_CHECK_updateLabelY
+		GEODE_CONCEPT_FUNCTION_CHECK(updateLabelY) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_valueFromScale
+		#define GEODE_CONCEPT_CHECK_valueFromScale
+		GEODE_CONCEPT_FUNCTION_CHECK(valueFromScale) 
+	#endif
+
+	#ifndef GEODE_CONCEPT_CHECK_valueFromSkew
+		#define GEODE_CONCEPT_CHECK_valueFromSkew
+		GEODE_CONCEPT_FUNCTION_CHECK(valueFromSkew) 
+	#endif
+
+
+	template<class Der>
+	struct ModifyDerive<Der, GJScaleControl> : ModifyBase<ModifyDerive<Der, GJScaleControl>> {
+        using BaseModify = ModifyBase<ModifyDerive<Der, GJScaleControl>>;
+		using ModifyBase<ModifyDerive<Der, GJScaleControl>>::ModifyBase;
+		using Base = GJScaleControl;
+        using Derived = Der;
+		void apply() override {
+
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x641840, Default, GJScaleControl, create, )
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x641990, Default, GJScaleControl, init, )
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642d30, Default, GJScaleControl, ccTouchBegan, cocos2d::CCTouch*, cocos2d::CCEvent*)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x6430c0, Default, GJScaleControl, ccTouchMoved, cocos2d::CCTouch*, cocos2d::CCEvent*)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x6434c0, Default, GJScaleControl, ccTouchEnded, cocos2d::CCTouch*, cocos2d::CCEvent*)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x643670, Default, GJScaleControl, ccTouchCancelled, cocos2d::CCTouch*, cocos2d::CCEvent*)
+            GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(GJScaleControl, applyFocusedInput, )
+            GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(GJScaleControl, createScaleInput, cocos2d::CCPoint, int, CCMenuItemSpriteExtra**)
+            GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(GJScaleControl, finishTouch, )
+            GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(GJScaleControl, hasActiveInput, )
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642360, Default, GJScaleControl, loadValues, GameObject*, cocos2d::CCArray*, std::unordered_map<int, GameObjectEditorState>&)
+            GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(GJScaleControl, onApplyScale, cocos2d::CCObject*)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642000, Default, GJScaleControl, onToggleLockScale, cocos2d::CCObject*)
+            GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(GJScaleControl, releaseInputFocus, )
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642c60, Default, GJScaleControl, scaleFromValue, float)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642ca0, Default, GJScaleControl, skewFromValue, float)
+            GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(GJScaleControl, sliderChanged, cocos2d::CCObject*)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642930, Default, GJScaleControl, updateLabelX, float)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642a40, Default, GJScaleControl, updateLabelXY, float)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642b50, Default, GJScaleControl, updateLabelY, float)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x642cf0, Default, GJScaleControl, valueFromScale, float)
+			GEODE_APPLY_MODIFY_FOR_FUNCTION(base::get() + 0x6428f0, Default, GJScaleControl, valueFromSkew, float)
+		}
+	};
+}

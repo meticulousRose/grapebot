@@ -1,0 +1,16 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/geode/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/_deps/result-build/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/_deps/json-build/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/_deps/nontype_functional-build/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/_deps/fmt-build/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/_deps/asp2-build/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/_deps/arc-build/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/_deps/tuliphook-build/cmake_install.cmake",
+		"/Users/rei/Projects/interhollow-public/NodeIDs/build-alpha2/bindings/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
