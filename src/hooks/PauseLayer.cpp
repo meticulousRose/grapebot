@@ -18,6 +18,7 @@
 using namespace geode::prelude;
 
 struct GrapePauseLayer : Modify<GrapePauseLayer, PauseLayer> {
+#ifndef GEODE_IS_IOS
     void goEdit() {
         auto* bot = GrapeEngine::get();
         if (auto* renderer = Renderer::get(); renderer->isRecording()) renderer->signalStop();
@@ -26,6 +27,7 @@ struct GrapePauseLayer : Modify<GrapePauseLayer, PauseLayer> {
         bot->keeper().wipe();
         bot->replay().onLevelExit();
     }
+#endif
 
     void customSetup() override {
         PauseLayer::customSetup();

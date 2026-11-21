@@ -142,7 +142,6 @@ struct GrapeGJBaseGameLayer : Modify<GrapeGJBaseGameLayer, GJBaseGameLayer> {
         if (GameManager::get()->getGameVariable("0010")) player2 = !player2;
         const auto press = down ? &PlayerObject::pushButton
                                 : &PlayerObject::releaseButton;
-        m_allowedButtons.clear();
         if (m_levelSettings->m_twoPlayerMode) {
             ((player2 ? m_player2 : m_player1)->*press)(button);
         } else {
@@ -283,19 +282,11 @@ struct GrapeGJBaseGameLayer : Modify<GrapeGJBaseGameLayer, GJBaseGameLayer> {
 #endif
         auto* bot = GrapeEngine::get();
 #ifdef GEODE_IS_MOBILE
-        if (grape::trace::enabled()) {
-            std::string allowed;
-            for (int id : m_allowedButtons)
-                allowed += (allowed.empty() ? "" : ",") + std::to_string(id);
-            grape::trace::add(fmt::format(
-                "game f={} {} {} p{} allowed=[{}]", bot->timeline().getFrame(),
-                buttonName(button), pressed ? "down" : "up", player1 ? 1 : 2,
-                allowed));
-        }
+
         if (bot->isEnabled() &&
             (bot->isRecording() || bot->isPlaying() ||
-             GrapeSettings::get()->frameStepperOverlay))
-            m_allowedButtons.clear();
+             GrapeSettings::get()->frameStepperOverlay)) {
+        }
         if (bot->isEnabled() && bot->isPlaying() &&
             !m_fields->m_replayingInput &&
             PlayLayer::get() == static_cast<GJBaseGameLayer*>(this) &&
@@ -325,7 +316,11 @@ struct GrapeGJBaseGameLayer : Modify<GrapeGJBaseGameLayer, GJBaseGameLayer> {
                 return false;
             case EventKind::RestartFull:
                 director.beginMacroReset();
+#if defined(GEODE_IS_IOS)
+                ((PlayLayer*)this)->resetLevel();
+#else
                 ((PlayLayer*)this)->fullReset();
+#endif
                 return true;
             case EventKind::Restart:
                 director.beginMacroReset();
@@ -364,7 +359,6 @@ struct GrapeGJBaseGameLayer : Modify<GrapeGJBaseGameLayer, GJBaseGameLayer> {
         } else {
             m_fields->m_replayingInput = true;
             for (int sent : {button, button + 2}) {
-                m_allowedButtons.clear();
                 GJBaseGameLayer::handleButton(action.m_holding, sent, !player2);
             }
             m_fields->m_replayingInput = false;

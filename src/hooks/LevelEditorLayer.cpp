@@ -72,6 +72,7 @@ struct GrapeLevelEditorLayer : Modify<GrapeLevelEditorLayer, LevelEditorLayer> {
     }
 
    public:
+#ifndef GEODE_IS_IOS
     void onPlaytest() {
         auto* bot = GrapeEngine::get();
         if (!bot->isEnabled()) return LevelEditorLayer::onPlaytest();
@@ -89,6 +90,7 @@ struct GrapeLevelEditorLayer : Modify<GrapeLevelEditorLayer, LevelEditorLayer> {
         restartPlayback();
         grape::intentional::settle();
     }
+#endif
 
     bool init(GJGameLevel* level, bool p1) {
         crash_log::breadcrumb("Opening the editor");
@@ -142,6 +144,7 @@ struct GrapeLevelEditorLayer : Modify<GrapeLevelEditorLayer, LevelEditorLayer> {
         refreshEditorOverlays(this, false);
     }
 
+#ifndef GEODE_IS_IOS
     void updateEditor(float dt) {
         auto* bot = GrapeEngine::get();
         const bool heldForPlayback =
@@ -160,4 +163,5 @@ struct GrapeLevelEditorLayer : Modify<GrapeLevelEditorLayer, LevelEditorLayer> {
             refreshEditorOverlays(this, true);
         }
     }
+#endif
 };

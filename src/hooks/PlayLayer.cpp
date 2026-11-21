@@ -66,6 +66,7 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
         uint64_t m_checkpointQueuedFrame = static_cast<uint64_t>(-1);
     };
 
+#ifndef GEODE_IS_IOS
     CheckpointObject* markCheckpoint() {
         if (!bot().isEnabled()) return PlayLayer::markCheckpoint();
 #ifdef GEODE_IS_MACOS
@@ -106,6 +107,7 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
         return checkpoint;
 #endif
     }
+#endif
 
     void storeCheckpoint(CheckpointObject* checkpoint) {
         if (!bot().isEnabled()) return PlayLayer::storeCheckpoint(checkpoint);
@@ -119,6 +121,7 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
             keeper.remember(checkpoint, bot().timeline().m_frameOnLastAttempt);
     }
 
+#ifndef GEODE_IS_IOS
     void loadFromCheckpoint(CheckpointObject* checkpoint) {
         bot().hitboxes().clearDeath();
         if (!bot().isEnabled()) return PlayLayer::loadFromCheckpoint(checkpoint);
@@ -126,6 +129,7 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
             PlayLayer::loadFromCheckpoint(target);
         });
     }
+#endif
 
     void removeCheckpoint(bool first) {
         if (!bot().isEnabled()) return PlayLayer::removeCheckpoint(first);
@@ -141,6 +145,7 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
         while (!bot().keeper().m_saved.empty()) removeCheckpoint(false);
     }
 
+#ifndef GEODE_IS_IOS
     void delayedResetLevel() {
         const bool pathfinderOwnsDeath = bot().pathfinder().m_enabled->inner() &&
                                          m_player1 && !m_player1->m_isDead;
@@ -148,7 +153,9 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
         grape::intentional::noteDeath();
         PlayLayer::delayedResetLevel();
     }
+#endif
 
+#ifndef GEODE_IS_IOS
     void fullReset() {
         if (!bot().isEnabled()) return PlayLayer::fullReset();
         if (grape::intentional::takeOverFullReset(this)) return;
@@ -156,6 +163,7 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
         bot().keeper().unstackPlatformer(true);
         bot().timeline().m_frameOnLastAttempt = 0;
     }
+#endif
 
     void resetLevel() override {
         grape::noclip::stopFlash(this);
@@ -193,9 +201,11 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
         finishRespawn(deathFrame);
     }
 
+#ifndef GEODE_IS_IOS
     void updateAttempts() {
         if (!bot().keeper().m_backstep) PlayLayer::updateAttempts();
     }
+#endif
 
     void onQuit() {
         crash_log::breadcrumb("Leaving level");

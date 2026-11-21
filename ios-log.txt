@@ -1,13 +1,10 @@
-3s
-1s
-1m 12s
 Run geode-sdk/build-geode-mod@963ac394ad1773b6ea5b0f96aade52a44c6a4770
 Detect platform
 0s
 Setup CPM Cache
 0s
 Install Ninja
-1s
+0s
 Download bindings repo
 3s
 Setup bindings enviroment
@@ -15,9 +12,9 @@ Setup bindings enviroment
 Setup CLI
 1s
 Setup Geode SDK
-12s
+17s
 Run CMake and build
-54s
+56s
 Run mkdir -p $HOME/.cache
   -- The C compiler identification is AppleClang 21.0.0.21000101
   -- The CXX compiler identification is AppleClang 21.0.0.21000101
@@ -42,7 +39,7 @@ Run mkdir -p $HOME/.cache
     now, but the ability to call it with declared details will be removed
     completely in a future version.
   Call Stack (most recent call first):
-    CMakeLists.txt:247 (FetchContent_Populate)
+    CMakeLists.txt:251 (FetchContent_Populate)
   This warning is for project developers.  Use -Wno-author to suppress it.
   
   -- Found Geode: /Users/runner/work/grapebot/grapebot/geode-sdk-clone
@@ -88,69 +85,72 @@ Run mkdir -p $HOME/.cache
   | Info | Dependency 'geode.node-ids' found on the index, installing (version '1.23.3')
   | Done | All dependencies resolved
   -- Skipping installing grape
-  -- Configuring done (23.1s)
+  -- Configuring done (20.3s)
   -- Generating done (0.2s)
   -- Build files have been written to: /Users/runner/work/grapebot/grapebot/build
   [0/2] Re-checking globbed directories...
-  [1/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lauxlib.c.o
-  [2/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lapi.c.o
-  [3/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lbaselib.c.o
-  [4/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lcorolib.c.o
-  [5/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lctype.c.o
-  [6/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lcode.c.o
-  [7/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ldo.c.o
-  [8/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ldebug.c.o
-  [9/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lfunc.c.o
-  [10/111] Building CXX object _deps/fmt-build/CMakeFiles/fmt.dir/src/os.cc.o
-  [11/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ldump.c.o
-  [12/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lmathlib.c.o
-  [13/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/llex.c.o
-  [14/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lmem.c.o
-  [15/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lgc.c.o
-  [16/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lopcodes.c.o
-  [17/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lobject.c.o
-  [18/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lstate.c.o
-  [19/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lstring.c.o
-  [20/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lparser.c.o
-  [21/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ltable.c.o
-  [22/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lstrlib.c.o
-  [23/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ltablib.c.o
-  [24/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ltm.c.o
-  [25/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lutf8lib.c.o
-  [26/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lundump.c.o
-  [27/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lzio.c.o
-  [28/111] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lvm.c.o
-  [29/111] Building CXX object _deps/fmt-build/CMakeFiles/fmt.dir/src/format.cc.o
-  [30/111] Building CXX object _deps/qsox-build/CMakeFiles/qsox.dir/Unity/unity_0_cxx.cxx.o
-  [31/111] Linking C static library libgrape_lua.a
-  [32/111] Linking CXX static library _deps/fmt-build/libfmt.a
-  [33/111] Linking CXX static library _deps/qsox-build/libqsox.a
-  [34/111] Building CXX object _deps/asp2-build/CMakeFiles/asp.dir/Unity/unity_0_cxx.cxx.o
-  [35/111] Linking CXX static library _deps/asp2-build/libasp.a
-  [36/111] Building CXX object _deps/arc-build/CMakeFiles/arc.dir/Unity/unity_0_cxx.cxx.o
-  [37/111] Linking CXX static library _deps/arc-build/libarc.a
-  [38/111] Running Codegen
-  [39/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_17_cxx.cxx.o
-  [40/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_16_cxx.cxx.o
-  [41/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_15_cxx.cxx.o
-  [42/111] Building CXX object CMakeFiles/grape.dir/cmake_pch.hxx.pch
-  [43/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_12_cxx.cxx.o
-  [44/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_14_cxx.cxx.o
-  [45/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_13_cxx.cxx.o
-  [46/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_11_cxx.cxx.o
-  [47/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_7_cxx.cxx.o
-  [48/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_8_cxx.cxx.o
-  [49/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_6_cxx.cxx.o
-  [50/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_9_cxx.cxx.o
-  [51/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_10_cxx.cxx.o
-  [52/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_5_cxx.cxx.o
-  [53/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_4_cxx.cxx.o
-  [54/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_1_cxx.cxx.o
-  [55/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_2_cxx.cxx.o
-  [56/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_0_cxx.cxx.o
-  [57/111] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_3_cxx.cxx.o
-  [58/111] Building CXX object CMakeFiles/grape.dir/src/engine/clock.cpp.o
-  [59/111] Building CXX object CMakeFiles/grape.dir/src/engine/tick_patch.cpp.o
+  [1/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lauxlib.c.o
+  [2/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lapi.c.o
+  [3/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lbaselib.c.o
+  [4/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lcorolib.c.o
+  [5/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lcode.c.o
+  [6/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lctype.c.o
+  [7/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ldo.c.o
+  [8/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ldebug.c.o
+  [9/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lfunc.c.o
+  [10/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ldump.c.o
+  [11/112] Building CXX object _deps/fmt-build/CMakeFiles/fmt.dir/src/os.cc.o
+  [12/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lmathlib.c.o
+  [13/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/llex.c.o
+  [14/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lmem.c.o
+  [15/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lgc.c.o
+  [16/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lobject.c.o
+  [17/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lopcodes.c.o
+  [18/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lstate.c.o
+  [19/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lstring.c.o
+  [20/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lparser.c.o
+  [21/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ltable.c.o
+  [22/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ltablib.c.o
+  [23/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lstrlib.c.o
+  [24/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/ltm.c.o
+  [25/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lutf8lib.c.o
+  [26/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lundump.c.o
+  [27/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lzio.c.o
+  [28/112] Building C object CMakeFiles/grape_lua.dir/_deps/grape_lua-src/src/lvm.c.o
+  [29/112] Building CXX object _deps/fmt-build/CMakeFiles/fmt.dir/src/format.cc.o
+  [30/112] Building CXX object _deps/qsox-build/CMakeFiles/qsox.dir/Unity/unity_0_cxx.cxx.o
+  [31/112] Linking C static library libgrape_lua.a
+  [32/112] Linking CXX static library _deps/fmt-build/libfmt.a
+  [33/112] Linking CXX static library _deps/qsox-build/libqsox.a
+  [34/112] Building CXX object _deps/asp2-build/CMakeFiles/asp.dir/Unity/unity_0_cxx.cxx.o
+  [35/112] Linking CXX static library _deps/asp2-build/libasp.a
+  [36/112] Building CXX object _deps/arc-build/CMakeFiles/arc.dir/Unity/unity_0_cxx.cxx.o
+  [37/112] Linking CXX static library _deps/arc-build/libarc.a
+  [38/112] Running Codegen
+  [39/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_17_cxx.cxx.o
+  [40/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_11_cxx.cxx.o
+  [41/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_16_cxx.cxx.o
+  [42/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_15_cxx.cxx.o
+  [43/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_12_cxx.cxx.o
+  [44/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_14_cxx.cxx.o
+  [45/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_13_cxx.cxx.o
+  [46/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_7_cxx.cxx.o
+  [47/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_8_cxx.cxx.o
+  [48/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_10_cxx.cxx.o
+  [49/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_9_cxx.cxx.o
+  [50/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_6_cxx.cxx.o
+  [51/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_5_cxx.cxx.o
+  [52/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_1_cxx.cxx.o
+  [53/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_4_cxx.cxx.o
+  [54/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_2_cxx.cxx.o
+  [55/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_0_cxx.cxx.o
+  [56/112] Building CXX object bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_3_cxx.cxx.o
+  [57/112] Linking CXX static library bindings/libGeodeBindings.a
+  [58/112] cd /Users/runner/work/grapebot/grapebot/build && /opt/homebrew/bin/cmake -DBINDINGS_DIR=/Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode -P /Users/runner/work/grapebot/grapebot/cmake/physics_shim.cmake
+  [59/112] Building CXX object CMakeFiles/grape.dir/src/oxorany/oxorany.cpp.o
+  [60/112] Building OBJCXX object CMakeFiles/grape.dir/src/render/ios_video_writer.mm.o
+  [61/112] Building CXX object CMakeFiles/grape.dir/cmake_pch.hxx.pch
+  [62/112] Building CXX object CMakeFiles/grape.dir/src/engine/tick_patch.cpp.o
   /Users/runner/work/grapebot/grapebot/src/engine/tick_patch.cpp:42:26: warning: unused function 'codeWindow' [-Wunused-function]
      42 | std::span<const uint8_t> codeWindow(uintptr_t start, std::size_t size) {
         |                          ^~~~~~~~~~
@@ -158,37 +158,209 @@ Run mkdir -p $HOME/.cache
      46 | bool applyPatch(uintptr_t address, geode::ByteSpan bytes) {
         |      ^~~~~~~~~~
   2 warnings generated.
-  [60/111] Building CXX object CMakeFiles/grape.dir/src/assist/cps.cpp.o
-  [61/111] Building CXX object CMakeFiles/grape.dir/src/main.cpp.o
-  [62/111] Building CXX object CMakeFiles/grape.dir/src/assist/autoclicker.cpp.o
-  [63/111] Building CXX object CMakeFiles/grape.dir/src/engine/timeline.cpp.o
-  [64/111] Building CXX object CMakeFiles/grape.dir/src/assist/pathfinder.cpp.o
-  [65/111] Building CXX object CMakeFiles/grape.dir/src/assist/hitboxes.cpp.o
-  [66/111] Building CXX object CMakeFiles/grape.dir/src/features/death_guard.cpp.o
-  [67/111] Building CXX object CMakeFiles/grape.dir/src/engine/engine.cpp.o
-  [68/111] Building CXX object CMakeFiles/grape.dir/src/features/intentional_death.cpp.o
-  [69/111] Building CXX object CMakeFiles/grape.dir/src/features/layout.cpp.o
-  FAILED: [code=1] CMakeFiles/grape.dir/src/features/layout.cpp.o 
-  /usr/bin/clang++ -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DGEODE_COMP_GD_VERSION=22091 -DGEODE_GD_VERSION=2.2091 -DGEODE_GD_VERSION_STRING=\"2.2091\" -DGEODE_MOD_ID=\"okhx.grape\" -DGLES_SILENCE_DEPRECATION -DMAT_JSON_DYNAMIC=1 -DPROJECT_NAME=grape -Dgrape_EXPORTS -I/Users/runner/work/grapebot/grapebot/src -I/Users/runner/work/grapebot/grapebot/include -I/Users/runner/work/grapebot/grapebot/src/oxorany -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib/backends -I/Users/runner/work/grapebot/grapebot/build/geode-deps -I/Users/runner/work/grapebot/grapebot/build/_deps/grape_lua-src/src -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/extensions -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/fmod -F/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/glaze/e979/include -isystem /Users/runner/work/grapebot/grapebot/build/bindings/bindings -isystem /Users/runner/work/grapebot/grapebot/bindings-repo/bindings/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/fmt/73a7/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/tuliphook/0737/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/result/9983/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/json/f358/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/asp2/9972/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/arc/e5fc/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/qsox/f5ee/include -O3 -DNDEBUG -std=gnu++23 -flto=thin -arch arm64 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -miphoneos-version-min=14.0 -fPIC -fvisibility=hidden -Wall -Wextra -Wno-dollar-in-identifier-extension -Wno-error=dollar-in-identifier-extension -Wno-missing-braces -ffunction-sections -fdata-sections -Winvalid-pch -Xclang -include-pch -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx -MD -MT CMakeFiles/grape.dir/src/features/layout.cpp.o -MF CMakeFiles/grape.dir/src/features/layout.cpp.o.d -o CMakeFiles/grape.dir/src/features/layout.cpp.o -c /Users/runner/work/grapebot/grapebot/src/features/layout.cpp
-  In file included from /Users/runner/work/grapebot/grapebot/src/features/layout.cpp:4:
-  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/GameObject.hpp:2366:13: error: static assertion failed due to requirement '!different': Function GameObject::addGlow does not have an available address in the bindings, please add it to the bindings to hook it.
-   2366 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(GameObject, addGlow, std::string)
-        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  [63/112] Building CXX object CMakeFiles/grape.dir/src/engine/clock.cpp.o
+  [64/112] Building CXX object CMakeFiles/grape.dir/src/assist/cps.cpp.o
+  [65/112] Building CXX object CMakeFiles/grape.dir/src/main.cpp.o
+  [66/112] Building CXX object CMakeFiles/grape.dir/src/assist/autoclicker.cpp.o
+  [67/112] Building CXX object CMakeFiles/grape.dir/src/assist/pathfinder.cpp.o
+  [68/112] Building CXX object CMakeFiles/grape.dir/src/engine/timeline.cpp.o
+  [69/112] Building CXX object CMakeFiles/grape.dir/src/features/death_guard.cpp.o
+  [70/112] Building CXX object CMakeFiles/grape.dir/src/assist/hitboxes.cpp.o
+  [71/112] Building CXX object CMakeFiles/grape.dir/src/engine/engine.cpp.o
+  [72/112] Building CXX object CMakeFiles/grape.dir/src/features/intentional_death.cpp.o
+  [73/112] Building CXX object CMakeFiles/grape.dir/src/features/layout.cpp.o
+  /Users/runner/work/grapebot/grapebot/src/features/layout.cpp:64:6: warning: unused function 'isScenery' [-Wunused-function]
+     64 | bool isScenery(GameObject* object) {
+        |      ^~~~~~~~~
+  1 warning generated.
+  [74/112] Building CXX object CMakeFiles/grape.dir/src/features/mirror.cpp.o
+  [75/112] Building CXX object CMakeFiles/grape.dir/src/features/noclip.cpp.o
+  [76/112] Building CXX object CMakeFiles/grape.dir/src/hooks/CCActionManager.cpp.o
+  [77/112] Building CXX object CMakeFiles/grape.dir/src/hooks/CCDirector.cpp.o
+  [78/112] Building CXX object CMakeFiles/grape.dir/src/hooks/CCScheduler.cpp.o
+  [79/112] Building CXX object CMakeFiles/grape.dir/src/hooks/EndLevelLayer.cpp.o
+  [80/112] Building CXX object CMakeFiles/grape.dir/src/hooks/EnhancedGameObject.cpp.o
+  [81/112] Building CXX object CMakeFiles/grape.dir/src/hooks/GJBaseGameLayer.cpp.o
+  FAILED: [code=1] CMakeFiles/grape.dir/src/hooks/GJBaseGameLayer.cpp.o 
+  /usr/bin/clang++ -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DGEODE_COMP_GD_VERSION=22091 -DGEODE_GD_VERSION=2.2091 -DGEODE_GD_VERSION_STRING=\"2.2091\" -DGEODE_MOD_ID=\"okhx.grape\" -DGLES_SILENCE_DEPRECATION -DMAT_JSON_DYNAMIC=1 -DPROJECT_NAME=grape -Dgrape_EXPORTS -I/Users/runner/work/grapebot/grapebot/src -I/Users/runner/work/grapebot/grapebot/include -I/Users/runner/work/grapebot/grapebot/src/oxorany -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib/backends -I/Users/runner/work/grapebot/grapebot/build/geode-deps -I/Users/runner/work/grapebot/grapebot/build/_deps/grape_lua-src/src -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/extensions -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/fmod -F/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/glaze/e979/include -isystem /Users/runner/work/grapebot/grapebot/build/bindings/bindings -isystem /Users/runner/work/grapebot/grapebot/bindings-repo/bindings/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/fmt/73a7/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/tuliphook/0737/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/result/9983/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/json/f358/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/asp2/9972/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/arc/e5fc/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/qsox/f5ee/include -O3 -DNDEBUG -std=gnu++23 -flto=thin -arch arm64 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -miphoneos-version-min=14.0 -fPIC -fvisibility=hidden -Wall -Wextra -Wno-dollar-in-identifier-extension -Wno-error=dollar-in-identifier-extension -Wno-missing-braces -ffunction-sections -fdata-sections -Winvalid-pch -Xclang -include-pch -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx -MD -MT CMakeFiles/grape.dir/src/hooks/GJBaseGameLayer.cpp.o -MF CMakeFiles/grape.dir/src/hooks/GJBaseGameLayer.cpp.o.d -o CMakeFiles/grape.dir/src/hooks/GJBaseGameLayer.cpp.o -c /Users/runner/work/grapebot/grapebot/src/hooks/GJBaseGameLayer.cpp
+  /Users/runner/work/grapebot/grapebot/src/hooks/GJBaseGameLayer.cpp:145:9: error: use of undeclared identifier 'm_allowedButtons'; did you mean 'm_queuedButtons'?
+    145 |         m_allowedButtons.clear();
+        |         ^~~~~~~~~~~~~~~~
+        |         m_queuedButtons
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/binding/GJBaseGameLayer.hpp:4460:38: note: 'm_queuedButtons' declared here
+   4460 |     std::vector<PlayerButtonCommand> m_queuedButtons;
+        |                                      ^
+  /Users/runner/work/grapebot/grapebot/src/hooks/GJBaseGameLayer.cpp:288:27: error: use of undeclared identifier 'm_allowedButtons'; did you mean 'm_queuedButtons'?
+    288 |             for (int id : m_allowedButtons)
+        |                           ^~~~~~~~~~~~~~~~
+        |                           m_queuedButtons
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/binding/GJBaseGameLayer.hpp:4460:38: note: 'm_queuedButtons' declared here
+   4460 |     std::vector<PlayerButtonCommand> m_queuedButtons;
+        |                                      ^
+  /Users/runner/work/grapebot/grapebot/src/hooks/GJBaseGameLayer.cpp:288:22: error: no viable conversion from 'PlayerButtonCommand' to 'int'
+    288 |             for (int id : m_allowedButtons)
+        |                      ^  ~
+  /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/usr/include/c++/v1/__vector/vector.h:351:64: note: selected 'begin' function with iterator type 'iterator' (aka '__wrap_iter<PlayerButtonCommand *>')
+    351 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI iterator begin() _NOEXCEPT {
+        |                                                                ^
+  /Users/runner/work/grapebot/grapebot/src/hooks/GJBaseGameLayer.cpp:298:13: error: use of undeclared identifier 'm_allowedButtons'; did you mean 'm_queuedButtons'?
+    298 |             m_allowedButtons.clear();
+        |             ^~~~~~~~~~~~~~~~
+        |             m_queuedButtons
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/binding/GJBaseGameLayer.hpp:4460:38: note: 'm_queuedButtons' declared here
+   4460 |     std::vector<PlayerButtonCommand> m_queuedButtons;
+        |                                      ^
+  /Users/runner/work/grapebot/grapebot/src/hooks/GJBaseGameLayer.cpp:367:17: error: use of undeclared identifier 'm_allowedButtons'; did you mean 'm_queuedButtons'?
+    367 |                 m_allowedButtons.clear();
+        |                 ^~~~~~~~~~~~~~~~
+        |                 m_queuedButtons
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/binding/GJBaseGameLayer.hpp:4460:38: note: 'm_queuedButtons' declared here
+   4460 |     std::vector<PlayerButtonCommand> m_queuedButtons;
+        |                                      ^
+  5 errors generated.
+  [82/112] Building CXX object CMakeFiles/grape.dir/src/hooks/FMODAudioEngine.cpp.o
+  /Users/runner/work/grapebot/grapebot/src/hooks/FMODAudioEngine.cpp:13:15: warning: unused variable 'AUDIO_FRAME' [-Wunused-const-variable]
+     13 | constexpr int AUDIO_FRAME = 1024;
+        |               ^~~~~~~~~~~
+  1 warning generated.
+  [83/112] Building CXX object CMakeFiles/grape.dir/src/hooks/LevelEditorLayer.cpp.o
+  FAILED: [code=1] CMakeFiles/grape.dir/src/hooks/LevelEditorLayer.cpp.o 
+  /usr/bin/clang++ -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DGEODE_COMP_GD_VERSION=22091 -DGEODE_GD_VERSION=2.2091 -DGEODE_GD_VERSION_STRING=\"2.2091\" -DGEODE_MOD_ID=\"okhx.grape\" -DGLES_SILENCE_DEPRECATION -DMAT_JSON_DYNAMIC=1 -DPROJECT_NAME=grape -Dgrape_EXPORTS -I/Users/runner/work/grapebot/grapebot/src -I/Users/runner/work/grapebot/grapebot/include -I/Users/runner/work/grapebot/grapebot/src/oxorany -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib/backends -I/Users/runner/work/grapebot/grapebot/build/geode-deps -I/Users/runner/work/grapebot/grapebot/build/_deps/grape_lua-src/src -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/extensions -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/fmod -F/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/glaze/e979/include -isystem /Users/runner/work/grapebot/grapebot/build/bindings/bindings -isystem /Users/runner/work/grapebot/grapebot/bindings-repo/bindings/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/fmt/73a7/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/tuliphook/0737/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/result/9983/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/json/f358/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/asp2/9972/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/arc/e5fc/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/qsox/f5ee/include -O3 -DNDEBUG -std=gnu++23 -flto=thin -arch arm64 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -miphoneos-version-min=14.0 -fPIC -fvisibility=hidden -Wall -Wextra -Wno-dollar-in-identifier-extension -Wno-error=dollar-in-identifier-extension -Wno-missing-braces -ffunction-sections -fdata-sections -Winvalid-pch -Xclang -include-pch -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx -MD -MT CMakeFiles/grape.dir/src/hooks/LevelEditorLayer.cpp.o -MF CMakeFiles/grape.dir/src/hooks/LevelEditorLayer.cpp.o.d -o CMakeFiles/grape.dir/src/hooks/LevelEditorLayer.cpp.o -c /Users/runner/work/grapebot/grapebot/src/hooks/LevelEditorLayer.cpp
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/LevelEditorLayer.cpp:22:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/LevelEditorLayer.hpp:1896:13: error: static assertion failed due to requirement '!different': Function LevelEditorLayer::onPlaytest does not have an available address in the bindings, please add it to the bindings to hook it.
+   1896 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(LevelEditorLayer, onPlaytest, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
      66 |         static_assert(!different,                                                                             \
         |                       ^~~~~~~~~~
-  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:503:61: note: in instantiation of member function 'geode::modifier::ModifyDerive<LayoutGameObject, GameObject>::apply' requested here
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:503:61: note: in instantiation of member function 'geode::modifier::ModifyDerive<GrapeLevelEditorLayer, LevelEditorLayer>::apply' requested here
     503 |         static inline modifier::ModifyDerive<Derived, Base> s_apply;
         |                                                             ^
-  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:505:50: note: in instantiation of static data member 'geode::Modify<LayoutGameObject, GameObject>::s_apply' requested here
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:505:50: note: in instantiation of static data member 'geode::Modify<GrapeLevelEditorLayer, LevelEditorLayer>::s_apply' requested here
+    505 |         static inline auto s_applyRef = &Modify::s_apply;
+        |                                                  ^
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/LevelEditorLayer.cpp:22:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/LevelEditorLayer.hpp:1956:13: error: static assertion failed due to requirement '!different': Function LevelEditorLayer::updateEditor does not have an available address in the bindings, please add it to the bindings to hook it.
+   1956 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(LevelEditorLayer, updateEditor, float)
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  2 errors generated.
+  [84/112] Building CXX object CMakeFiles/grape.dir/src/hooks/PauseLayer.cpp.o
+  FAILED: [code=1] CMakeFiles/grape.dir/src/hooks/PauseLayer.cpp.o 
+  /usr/bin/clang++ -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DGEODE_COMP_GD_VERSION=22091 -DGEODE_GD_VERSION=2.2091 -DGEODE_GD_VERSION_STRING=\"2.2091\" -DGEODE_MOD_ID=\"okhx.grape\" -DGLES_SILENCE_DEPRECATION -DMAT_JSON_DYNAMIC=1 -DPROJECT_NAME=grape -Dgrape_EXPORTS -I/Users/runner/work/grapebot/grapebot/src -I/Users/runner/work/grapebot/grapebot/include -I/Users/runner/work/grapebot/grapebot/src/oxorany -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib/backends -I/Users/runner/work/grapebot/grapebot/build/geode-deps -I/Users/runner/work/grapebot/grapebot/build/_deps/grape_lua-src/src -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/extensions -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/fmod -F/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/glaze/e979/include -isystem /Users/runner/work/grapebot/grapebot/build/bindings/bindings -isystem /Users/runner/work/grapebot/grapebot/bindings-repo/bindings/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/fmt/73a7/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/tuliphook/0737/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/result/9983/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/json/f358/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/asp2/9972/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/arc/e5fc/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/qsox/f5ee/include -O3 -DNDEBUG -std=gnu++23 -flto=thin -arch arm64 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -miphoneos-version-min=14.0 -fPIC -fvisibility=hidden -Wall -Wextra -Wno-dollar-in-identifier-extension -Wno-error=dollar-in-identifier-extension -Wno-missing-braces -ffunction-sections -fdata-sections -Winvalid-pch -Xclang -include-pch -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx -MD -MT CMakeFiles/grape.dir/src/hooks/PauseLayer.cpp.o -MF CMakeFiles/grape.dir/src/hooks/PauseLayer.cpp.o.d -o CMakeFiles/grape.dir/src/hooks/PauseLayer.cpp.o -c /Users/runner/work/grapebot/grapebot/src/hooks/PauseLayer.cpp
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PauseLayer.cpp:2:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PauseLayer.hpp:422:13: error: static assertion failed due to requirement '!different': Function PauseLayer::goEdit does not have an available address in the bindings, please add it to the bindings to hook it.
+    422 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PauseLayer, goEdit, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:503:61: note: in instantiation of member function 'geode::modifier::ModifyDerive<GrapePauseLayer, PauseLayer>::apply' requested here
+    503 |         static inline modifier::ModifyDerive<Derived, Base> s_apply;
+        |                                                             ^
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:505:50: note: in instantiation of static data member 'geode::Modify<GrapePauseLayer, PauseLayer>::s_apply' requested here
     505 |         static inline auto s_applyRef = &Modify::s_apply;
         |                                                  ^
   1 error generated.
-  [70/111] Building CXX object CMakeFiles/grape.dir/src/features/noclip.cpp.o
-  [71/111] Building CXX object CMakeFiles/grape.dir/src/features/mirror.cpp.o
-  [72/111] Building CXX object CMakeFiles/grape.dir/src/hooks/CCActionManager.cpp.o
-  [73/111] Building CXX object CMakeFiles/grape.dir/src/hooks/CCDirector.cpp.o
-  [74/111] Building CXX object CMakeFiles/grape.dir/src/hooks/CCScheduler.cpp.o
-  [75/111] Building CXX object CMakeFiles/grape.dir/src/hooks/EndLevelLayer.cpp.o
+  [85/112] Building CXX object CMakeFiles/grape.dir/src/hooks/PlayLayer.cpp.o
+  FAILED: [code=1] CMakeFiles/grape.dir/src/hooks/PlayLayer.cpp.o 
+  /usr/bin/clang++ -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DGEODE_COMP_GD_VERSION=22091 -DGEODE_GD_VERSION=2.2091 -DGEODE_GD_VERSION_STRING=\"2.2091\" -DGEODE_MOD_ID=\"okhx.grape\" -DGLES_SILENCE_DEPRECATION -DMAT_JSON_DYNAMIC=1 -DPROJECT_NAME=grape -Dgrape_EXPORTS -I/Users/runner/work/grapebot/grapebot/src -I/Users/runner/work/grapebot/grapebot/include -I/Users/runner/work/grapebot/grapebot/src/oxorany -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib/backends -I/Users/runner/work/grapebot/grapebot/build/geode-deps -I/Users/runner/work/grapebot/grapebot/build/_deps/grape_lua-src/src -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/extensions -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/fmod -F/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/glaze/e979/include -isystem /Users/runner/work/grapebot/grapebot/build/bindings/bindings -isystem /Users/runner/work/grapebot/grapebot/bindings-repo/bindings/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/fmt/73a7/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/tuliphook/0737/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/result/9983/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/json/f358/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/asp2/9972/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/arc/e5fc/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/qsox/f5ee/include -O3 -DNDEBUG -std=gnu++23 -flto=thin -arch arm64 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -miphoneos-version-min=14.0 -fPIC -fvisibility=hidden -Wall -Wextra -Wno-dollar-in-identifier-extension -Wno-error=dollar-in-identifier-extension -Wno-missing-braces -ffunction-sections -fdata-sections -Winvalid-pch -Xclang -include-pch -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx -MD -MT CMakeFiles/grape.dir/src/hooks/PlayLayer.cpp.o -MF CMakeFiles/grape.dir/src/hooks/PlayLayer.cpp.o.d -o CMakeFiles/grape.dir/src/hooks/PlayLayer.cpp.o -c /Users/runner/work/grapebot/grapebot/src/hooks/PlayLayer.cpp
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayLayer.cpp:34:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayLayer.hpp:1537:13: error: static assertion failed due to requirement '!different': Function PlayLayer::delayedResetLevel does not have an available address in the bindings, please add it to the bindings to hook it.
+   1537 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayLayer, delayedResetLevel, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:503:61: note: in instantiation of member function 'geode::modifier::ModifyDerive<GrapePlayLayer, PlayLayer>::apply' requested here
+    503 |         static inline modifier::ModifyDerive<Derived, Base> s_apply;
+        |                                                             ^
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:505:50: note: in instantiation of static data member 'geode::Modify<GrapePlayLayer, PlayLayer>::s_apply' requested here
+    505 |         static inline auto s_applyRef = &Modify::s_apply;
+        |                                                  ^
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayLayer.cpp:34:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayLayer.hpp:1549:13: error: static assertion failed due to requirement '!different': Function PlayLayer::fullReset does not have an available address in the bindings, please add it to the bindings to hook it.
+   1549 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayLayer, fullReset, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayLayer.cpp:34:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayLayer.hpp:1566:13: error: static assertion failed due to requirement '!different': Function PlayLayer::loadFromCheckpoint does not have an available address in the bindings, please add it to the bindings to hook it.
+   1566 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayLayer, loadFromCheckpoint, CheckpointObject*)
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayLayer.cpp:34:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayLayer.hpp:1569:13: error: static assertion failed due to requirement '!different': Function PlayLayer::markCheckpoint does not have an available address in the bindings, please add it to the bindings to hook it.
+   1569 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayLayer, markCheckpoint, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayLayer.cpp:34:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayLayer.hpp:1625:13: error: static assertion failed due to requirement '!different': Function PlayLayer::updateAttempts does not have an available address in the bindings, please add it to the bindings to hook it.
+   1625 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayLayer, updateAttempts, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  5 errors generated.
+  [86/112] Building CXX object CMakeFiles/grape.dir/src/hooks/PlayerObject.cpp.o
+  FAILED: [code=1] CMakeFiles/grape.dir/src/hooks/PlayerObject.cpp.o 
+  /usr/bin/clang++ -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DGEODE_COMP_GD_VERSION=22091 -DGEODE_GD_VERSION=2.2091 -DGEODE_GD_VERSION_STRING=\"2.2091\" -DGEODE_MOD_ID=\"okhx.grape\" -DGLES_SILENCE_DEPRECATION -DMAT_JSON_DYNAMIC=1 -DPROJECT_NAME=grape -Dgrape_EXPORTS -I/Users/runner/work/grapebot/grapebot/src -I/Users/runner/work/grapebot/grapebot/include -I/Users/runner/work/grapebot/grapebot/src/oxorany -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib -I/Users/runner/work/grapebot/grapebot/lib/libs/lib/imgui_lib/backends -I/Users/runner/work/grapebot/grapebot/build/geode-deps -I/Users/runner/work/grapebot/grapebot/build/_deps/grape_lua-src/src -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/include -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/cocos/extensions -I/Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/fmod -F/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/System/Library/Frameworks -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/glaze/e979/include -isystem /Users/runner/work/grapebot/grapebot/build/bindings/bindings -isystem /Users/runner/work/grapebot/grapebot/bindings-repo/bindings/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/fmt/73a7/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/tuliphook/0737/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/result/9983/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/json/f358/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/asp2/9972/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/arc/e5fc/include -isystem /Users/runner/work/grapebot/grapebot/cpm-cache/qsox/f5ee/include -O3 -DNDEBUG -std=gnu++23 -flto=thin -arch arm64 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk -miphoneos-version-min=14.0 -fPIC -fvisibility=hidden -Wall -Wextra -Wno-dollar-in-identifier-extension -Wno-error=dollar-in-identifier-extension -Wno-missing-braces -ffunction-sections -fdata-sections -Winvalid-pch -Xclang -include-pch -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /Users/runner/work/grapebot/grapebot/build/CMakeFiles/grape.dir/cmake_pch.hxx -MD -MT CMakeFiles/grape.dir/src/hooks/PlayerObject.cpp.o -MF CMakeFiles/grape.dir/src/hooks/PlayerObject.cpp.o.d -o CMakeFiles/grape.dir/src/hooks/PlayerObject.cpp.o -c /Users/runner/work/grapebot/grapebot/src/hooks/PlayerObject.cpp
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayerObject.cpp:16:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayerObject.hpp:2098:13: error: static assertion failed due to requirement '!different': Function PlayerObject::bumpPlayer does not have an available address in the bindings, please add it to the bindings to hook it.
+   2098 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayerObject, bumpPlayer, float, int, bool, GameObject*)
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:503:61: note: in instantiation of member function 'geode::modifier::ModifyDerive<GrapePlayerObject, PlayerObject>::apply' requested here
+    503 |         static inline modifier::ModifyDerive<Derived, Base> s_apply;
+        |                                                             ^
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:505:50: note: in instantiation of static data member 'geode::Modify<GrapePlayerObject, PlayerObject>::s_apply' requested here
+    505 |         static inline auto s_applyRef = &Modify::s_apply;
+        |                                                  ^
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayerObject.cpp:16:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayerObject.hpp:2178:13: error: static assertion failed due to requirement '!different': Function PlayerObject::playSpawnEffect does not have an available address in the bindings, please add it to the bindings to hook it.
+   2178 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayerObject, playSpawnEffect, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayerObject.cpp:16:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayerObject.hpp:2183:13: error: static assertion failed due to requirement '!different': Function PlayerObject::propellPlayer does not have an available address in the bindings, please add it to the bindings to hook it.
+   2183 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayerObject, propellPlayer, float, bool, int)
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayerObject.cpp:16:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayerObject.hpp:2193:13: error: static assertion failed due to requirement '!different': Function PlayerObject::removePendingCheckpoint does not have an available address in the bindings, please add it to the bindings to hook it.
+   2193 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayerObject, removePendingCheckpoint, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayerObject.cpp:16:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayerObject.hpp:2231:13: error: static assertion failed due to requirement '!different': Function PlayerObject::startDashing does not have an available address in the bindings, please add it to the bindings to hook it.
+   2231 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayerObject, startDashing, DashRingObject*)
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  In file included from /Users/runner/work/grapebot/grapebot/src/hooks/PlayerObject.cpp:16:
+  /Users/runner/work/grapebot/grapebot/build/bindings/bindings/Geode/modify/PlayerObject.hpp:2255:13: error: static assertion failed due to requirement '!different': Function PlayerObject::tryPlaceCheckpoint does not have an available address in the bindings, please add it to the bindings to hook it.
+   2255 |             GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED(PlayerObject, tryPlaceCheckpoint, )
+        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /Users/runner/work/grapebot/grapebot/geode-sdk-clone/loader/include/Geode/modify/Modify.hpp:66:23: note: expanded from macro 'GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED'
+     66 |         static_assert(!different,                                                                             \
+        |                       ^~~~~~~~~~
+  6 errors generated.
+  [87/112] Building CXX object CMakeFiles/grape.dir/src/hooks/RandTriggerGameObject.cpp.o
   ninja: build stopped: subcommand failed.
   Error: Process completed with exit code 1.
