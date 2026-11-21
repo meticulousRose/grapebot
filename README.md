@@ -6,7 +6,7 @@ Grape is an independent implementation, released under the [Grape Open Source Li
 
 ## Build
 
-The project targets Geode `6.0.0-alpha.2` and Geometry Dash `2.2091`. The public CI builds macOS, iOS and Android packages. The Windows configuration is under `pc/`.
+The project targets Geode `6.0.0-beta.1` and Geometry Dash `2.2091`. The public CI builds macOS, iOS and Android packages. The Windows configuration is under `pc/`.
 
 macOS (arm64):
 

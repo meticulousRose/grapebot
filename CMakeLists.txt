@@ -126,7 +126,8 @@ if (NOT GRAPE_MOBILE)
 endif()
 
 if (APPLE)
-    target_sources(${PROJECT_NAME} PRIVATE src/render/ios_video_writer.mm)
+    target_sources(${PROJECT_NAME} PRIVATE src/render/ios_video_writer.mm
+        src/hooks/ios_link_stubs.cpp)
     set_source_files_properties(src/render/ios_video_writer.mm PROPERTIES
         COMPILE_OPTIONS "-fobjc-arc"
     )
