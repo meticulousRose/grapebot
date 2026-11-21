@@ -5,6 +5,11 @@
 #include <Geode/binding/FMODAudioEngine.hpp>
 #include <Geode/binding/UndoObject.hpp>
 #include <Geode/binding/EffectGameObject.hpp>
+#include <Geode/binding/GJEffectManager.hpp>
+#include <Geode/binding/CheckpointGameObject.hpp>
+#include <Geode/binding/ForceBlockGameObject.hpp>
+#include <Geode/binding/EditorUI.hpp>
+#include <Geode/binding/OBB2D.hpp>
 #include <Geode/Enums.hpp>
 
 using namespace cocos2d;
@@ -53,5 +58,26 @@ UndoObject* UndoObject::createWithTransformObjects(CCArray* objects,
                                                    UndoCommand command) {
     return nullptr;
 }
+
+void FMODAudioEngine::setEffectsVolume(float volume) {}
+float FMODAudioEngine::getBackgroundMusicVolume() { return 1.f; }
+void FMODAudioEngine::setBackgroundMusicVolume(float volume) {}
+
+void GJEffectManager::saveToState(EffectManagerState& state) {}
+void GJEffectManager::loadFromState(EffectManagerState& state) {}
+void GJEffectManager::playerButton(bool down, bool player1) {}
+ColorAction* GJEffectManager::getColorAction(int index) { return nullptr; }
+void GJEffectManager::postCollisionCheck() {}
+
+EffectManagerState::EffectManagerState() = default;
+
+void LevelEditorLayer::addToUndoList(UndoObject* object, bool keepRedo) {}
+void CheckpointGameObject::updateCheckpointSpriteVisibility() {}
+CCPoint ForceBlockGameObject::calculateForceToTarget(GameObject* target) {
+    return CCPointZero;
+}
+bool OBB2D::overlaps1Way(OBB2D* other) { return false; }
+void EditorUI::moveObject(GameObject* object, CCPoint offset) {}
+CCArray* EditorUI::getSelectedObjects() { return CCArray::create(); }
 
 #endif
