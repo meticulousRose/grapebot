@@ -157,6 +157,7 @@ struct LayoutGameLayer : Modify<LayoutGameLayer, GJBaseGameLayer> {
 };
 
 struct LayoutGameObject : Modify<LayoutGameObject, GameObject> {
+#if !defined(GEODE_IS_IOS) && !defined(GEODE_IS_ANDROID)
     void addGlow(std::string frame) {
         GameObject::addGlow(std::move(frame));
         if (LevelEditorLayer::get() || !layoutWanted()) return;
@@ -172,6 +173,7 @@ struct LayoutGameObject : Modify<LayoutGameObject, GameObject> {
             m_opacityMod2 = .5f;
         }
     }
+#endif
 };
 
 struct LayoutEffects : Modify<LayoutEffects, GJEffectManager> {

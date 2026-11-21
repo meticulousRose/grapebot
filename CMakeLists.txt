@@ -12,6 +12,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 
 project(grape VERSION 1.0.1)
+
+# CMake 4.x scans C++20+ targets for modules; the NDK clang cannot scan the
+# standard library modules and fmt's build fails on Android without this.
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 include(CTest)
 
 if (WIN32 AND NOT GRAPE_PC)
@@ -289,6 +293,15 @@ foreach(grape_physics_header IN LISTS GRAPE_PHYSICS_HEADERS)
         file(WRITE "${grape_physics_header}" "${grape_physics_contents}")
     endif()
 endforeach()
+
+# The build re-runs codegen when the generated bindings are out of date,
+# which wipes the configure-time shim. Re-apply it after the bindings
+# library is built and before this mod compiles.
+add_custom_target(grape_physics_shim
+    COMMAND ${CMAKE_COMMAND} -DBINDINGS_DIR=${CMAKE_BINARY_DIR}/bindings/bindings/Geode
+            -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/physics_shim.cmake)
+add_dependencies(grape_physics_shim GeodeBindings)
+add_dependencies(grape grape_physics_shim)
 
 CPMAddPackage("gh:stephenberry/glaze#3bfd53e70db09247f3726a65abd7c7c2414a1601")
 target_link_libraries(${PROJECT_NAME} glaze::glaze)
