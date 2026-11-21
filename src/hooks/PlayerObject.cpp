@@ -46,9 +46,11 @@ struct GrapePlayerObject : Modify<GrapePlayerObject, PlayerObject> {
         if (!simulated()) bot().trajectory().setDelta(dt);
     }
 
+#ifndef GEODE_IS_IOS
     void playSpawnEffect() {
         if (!bot().keeper().m_pendingRestore) PlayerObject::playSpawnEffect();
     }
+#endif
 
     void playDeathEffect() {
         if (!grape::death::hidesDeathEffect()) PlayerObject::playDeathEffect();
@@ -83,20 +85,26 @@ struct GrapePlayerObject : Modify<GrapePlayerObject, PlayerObject> {
         bot().labels().update(Renderer::get()->isRecording());
     }
 
+#ifndef GEODE_IS_IOS
     void bumpPlayer(float force, int type, bool effect, GameObject* object) {
         if (simulated()) return phys::bumpPlayer(this, force, type, effect, object);
         PlayerObject::bumpPlayer(force, type, effect, object);
     }
+#endif
 
+#ifndef GEODE_IS_IOS
     void propellPlayer(float force, bool noEffect, int type) {
         if (simulated()) return phys::propellPlayer(this, force, noEffect, type);
         PlayerObject::propellPlayer(force, noEffect, type);
     }
+#endif
 
+#ifndef GEODE_IS_IOS
     void startDashing(DashRingObject* ring) {
         if (simulated()) return phys::startDashing(this, ring);
         PlayerObject::startDashing(ring);
     }
+#endif
 
 #ifdef GEODE_IS_WINDOWS
     void stopDashing() {
@@ -105,8 +113,11 @@ struct GrapePlayerObject : Modify<GrapePlayerObject, PlayerObject> {
     }
 #endif
 
+#ifndef GEODE_IS_IOS
     void removePendingCheckpoint() {}
+#endif
 
+#ifndef GEODE_IS_IOS
     void tryPlaceCheckpoint() {
         if (!GameManager::get()->getGameVariable("0027")) return;
         const double gap = m_quickCheckpointMode ? QUICK_CHECKPOINT_GAP : CHECKPOINT_GAP;
@@ -116,6 +127,7 @@ struct GrapePlayerObject : Modify<GrapePlayerObject, PlayerObject> {
         m_shouldTryPlacingCheckpoint = false;
         m_lastCheckpointTime = m_totalTime;
     }
+#endif
 
     void releaseAllButtons() {
         if (!bot().isEnabled()) return PlayerObject::releaseAllButtons();

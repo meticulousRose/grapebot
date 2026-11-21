@@ -2047,15 +2047,16 @@ void MobileMenu::buildScriptsPage() {
                 }
                 auto path = std::move(result).unwrap();
                 if (!path) return;
-                
-                if (path->extension() != "lua") {
+
+                const auto source = grape::paths::toStd(*path);
+                if (source.extension() != ".lua") {
                     notify("Pick a .lua file", true);
                     return;
                 }
                 std::error_code error;
-                const auto target = grape::paths::directory("scripts") / path->filename().string();
+                const auto target = grape::paths::directory("scripts") / source.filename();
                 std::filesystem::copy_file(
-                    grape::paths::toStd(*path), target,
+                    source, target,
                     std::filesystem::copy_options::overwrite_existing, error);
                 if (error) {
                     notify("Could not copy the script", true);
