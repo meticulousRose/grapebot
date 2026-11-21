@@ -82,7 +82,7 @@ inline std::expected<void, std::string> appendPlayer(
 
 inline std::expected<void, std::string> decodeCluster(
     Scanner& atom, std::vector<Event>& events, uint64_t count,
-    uint16_t deltaExp, uint64_t repeats) {
+    uint16_t deltaExp, uint64_t repeats, uint64_t limit) {
     const uint64_t width = 1ull << deltaExp;
     if (count > atom.left() / width)
         return std::unexpected(std::string("slc input count exceeds data"));
@@ -95,7 +95,8 @@ inline std::expected<void, std::string> decodeCluster(
         cluster.emplace_back(raw.value() >> 4,
                              static_cast<uint8_t>(raw.value() & 0xF));
     }
-    for (uint64_t round = 0; round < repeats; ++round) {
+    for (uint64_t round = 0;
+         round < repeats && events.size() < limit; ++round) {
         for (const auto& [delta, bits] : cluster) {
             const auto placed =
                 appendPlayer(events, delta, (bits >> 2) & 3, (bits & 1) != 0,
@@ -107,7 +108,7 @@ inline std::expected<void, std::string> decodeCluster(
 }
 
 inline std::expected<void, std::string> decodeSection(
-    Scanner& atom, std::vector<Event>& events) {
+    Scanner& atom, std::vector<Event>& events, uint64_t limit) {
     const auto header = atom.low(2);
     if (!header.has_value()) return std::unexpected(header.error());
     const auto field = static_cast<uint16_t>(header.value());
@@ -116,13 +117,13 @@ inline std::expected<void, std::string> decodeSection(
         case 0: {
             const uint16_t deltaExp = (field >> 12) & 0x3;
             const uint64_t count = 1ull << ((field >> 8) & 0xF);
-            return decodeCluster(atom, events, count, deltaExp, 1);
+            return decodeCluster(atom, events, count, deltaExp, 1, limit);
         }
         case 1: {
             const uint16_t deltaExp = (field >> 12) & 0x3;
             const uint64_t count = 1ull << ((field >> 8) & 0xF);
             const uint64_t repeats = 1ull << ((field >> 3) & 0x1F);
-            return decodeCluster(atom, events, count, deltaExp, repeats);
+            return decodeCluster(atom, events, count, deltaExp, repeats, limit);
         }
         case 2: {
             const uint8_t special = (field >> 10) & 0xF;
@@ -175,11 +176,15 @@ inline std::expected<void, std::string> decodeActionAtom(
     Scanner atom(body);
     const auto declared = atom.low(8);
     if (!declared.has_value()) return std::unexpected(declared.error());
-    if (declared.value() > body.size() - 8)
+    // Inputs are bit-packed inside clusters, so the declared count can
+    // legitimately be much larger than the atom's byte size; decoding stops
+    // on truncation by itself. Only absurd counts are rejected here.
+    constexpr uint64_t MAX_ACTIONS = 100'000'000;
+    if (declared.value() > MAX_ACTIONS)
         return std::unexpected(
             std::string("slc action count exceeds atom size"));
     while (events.size() < declared.value()) {
-        const auto section = decodeSection(atom, events);
+        const auto section = decodeSection(atom, events, declared.value());
         if (!section.has_value()) return section;
     }
     return {};

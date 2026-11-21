@@ -2,7 +2,7 @@
 
 #include <Geode/platform/cplatform.h>
 
-#ifdef GEODE_IS_IOS
+#if defined(GEODE_IS_IOS) || defined(GEODE_IS_MACOS)
 
 #include <Geode/Result.hpp>
 #include <cstdint>

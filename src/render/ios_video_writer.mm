@@ -1,6 +1,6 @@
 #include "ios_video_writer.hpp"
 
-#ifdef GEODE_IS_IOS
+#if defined(GEODE_IS_IOS) || defined(GEODE_IS_MACOS)
 
 #import <AVFoundation/AVFoundation.h>
 #import <CoreVideo/CoreVideo.h>

@@ -18,6 +18,10 @@
 #include "core/format.hpp"
 #include "core/gpu_capture.hpp"
 
+#if defined(GEODE_IS_MACOS)
+#include "ios_video_writer.hpp"
+#endif
+
 namespace grape::render {
 
 class PcPipeline {
@@ -35,6 +39,7 @@ class PcPipeline {
         bool m_audio = true;
         int m_sampleRate = 48000;
         int m_channels = 2;
+        bool m_forceNativeEncoder = false;
     };
 
     ~PcPipeline() { shutdown(); }
@@ -54,11 +59,18 @@ class PcPipeline {
 
     bool canCapture() const {
         if (!m_running.load(std::memory_order_acquire)) return true;
-        return m_capture.hasCapacity();
+        
+        
+        
+        
+        return m_capture.hasCapacity() || m_capture.hasPendingReadback();
     }
 
     void requestStop();
     void shutdown();
+
+    void saveView() { m_capture.saveView(); }
+    void restoreView() { m_capture.restoreView(); }
 
     bool running() const { return m_running.load(std::memory_order_acquire); }
     bool draining() const { return m_draining.load(std::memory_order_acquire); }
@@ -78,6 +90,7 @@ class PcPipeline {
     };
 
     void encoderLoop();
+    bool submitNativeFrame(int64_t pts);
     void teardown();
     void recordFailure(std::string message);
 
@@ -86,6 +99,12 @@ class PcPipeline {
     VideoEncoder m_video{&m_api};
     AudioEncoder m_audio{&m_api};
     GpuCapture m_capture;
+
+#if defined(GEODE_IS_MACOS)
+    std::unique_ptr<IOSVideoWriter> m_writer;
+    std::vector<uint8_t> m_nativeFrame;
+    bool m_native = false;
+#endif
 
     FormatSpec const* m_format = nullptr;
     int m_videoStream = -1;

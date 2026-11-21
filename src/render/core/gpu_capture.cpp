@@ -3,6 +3,9 @@
 #include <Geode/Geode.hpp>
 #include <Geode/binding/GJBaseGameLayer.hpp>
 
+#include <chrono>
+#include <thread>
+
 using namespace cocos2d;
 
 namespace grape::render {
@@ -13,10 +16,13 @@ geode::Result<> GpuCapture::init(FormatSpec const*, uint32_t, uint32_t) {
     return geode::Err("GPU capture is not available on Android");
 }
 void GpuCapture::destroy() {}
-GpuCapture::Lease GpuCapture::capture(int64_t) { return {}; }
-GpuCapture::Lease GpuCapture::leaseOldest() { return {}; }
+std::vector<GpuCapture::Lease> GpuCapture::capture(int64_t) { return {}; }
+GpuCapture::Lease GpuCapture::leaseOldest(uint64_t) { return {}; }
+bool GpuCapture::makeRoom(std::vector<Lease>&) { return false; }
 std::vector<GpuCapture::Lease> GpuCapture::drainPending() { return {}; }
 void GpuCapture::release(int) {}
+void GpuCapture::saveView() {}
+void GpuCapture::restoreView() {}
 void GpuCapture::displayPreview() {}
 geode::Result<> GpuCapture::buildSceneTarget() { return geode::Ok(); }
 geode::Result<> GpuCapture::buildPlane(Plane&, PlaneSpec const&) {
@@ -147,7 +153,12 @@ geode::Result<> GpuCapture::buildFadeProgram() {
 }
 
 void GpuCapture::drawFade() {
-    if (m_fade <= 0.0f || !m_fadeProgram || !m_quadVao) return;
+    if (m_fade <= 0.0f || !m_fadeProgram) return;
+#ifdef GEODE_IS_MACOS
+    bindQuad();
+#else
+    if (!m_quadVao) return;
+#endif
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_sceneFbo);
     glViewport(0, 0, static_cast<GLsizei>(m_width),
@@ -157,9 +168,15 @@ void GpuCapture::drawFade() {
 
     glUseProgram(m_fadeProgram);
     if (m_uFadeColor >= 0) glUniform4f(m_uFadeColor, 0.f, 0.f, 0.f, m_fade);
+#ifdef GEODE_IS_MACOS
+    bindQuad();
+#else
     glBindVertexArray(m_quadVao);
+#endif
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+#ifndef GEODE_IS_MACOS
     glBindVertexArray(0);
+#endif
 
     glDisable(GL_BLEND);
 }
@@ -233,11 +250,12 @@ geode::Result<> GpuCapture::init(FormatSpec const* format, uint32_t width,
         -1.f, -1.f, 0.f, 0.f, 1.f, -1.f, 1.f, 0.f,
         1.f,  1.f,  1.f, 1.f, -1.f, 1.f, 0.f, 1.f,
     };
-    glGenVertexArrays(1, &m_quadVao);
-    glBindVertexArray(m_quadVao);
     glGenBuffers(1, &m_quadVbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_quadVbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(QUAD), QUAD, GL_STATIC_DRAW);
+#ifndef GEODE_IS_MACOS
+    glGenVertexArrays(1, &m_quadVao);
+    glBindVertexArray(m_quadVao);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
                           reinterpret_cast<void*>(0));
     glEnableVertexAttribArray(0);
@@ -245,6 +263,9 @@ geode::Result<> GpuCapture::init(FormatSpec const* format, uint32_t width,
                           reinterpret_cast<void*>(2 * sizeof(float)));
     glEnableVertexAttribArray(1);
     glBindVertexArray(0);
+#else
+    bindQuad();
+#endif
 
     m_writeIndex = 0;
     m_pendingHead = 0;
@@ -329,9 +350,15 @@ void GpuCapture::convertPlanes() {
                 glUniform2f(plane.m_uTexelSize, 1.f / plane.m_width,
                             1.f / plane.m_height);
 
+#ifdef GEODE_IS_MACOS
+            bindQuad();
+#else
             glBindVertexArray(m_quadVao);
+#endif
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+#ifndef GEODE_IS_MACOS
             glBindVertexArray(0);
+#endif
         } else {
             glBindFramebuffer(GL_FRAMEBUFFER, m_sceneFbo);
             glViewport(0, 0, static_cast<GLsizei>(plane.m_width),
@@ -345,25 +372,47 @@ void GpuCapture::convertPlanes() {
     }
 }
 
-GpuCapture::Lease GpuCapture::leaseOldest() {
+#ifdef GEODE_IS_MACOS
+void GpuCapture::bindQuad() {
+    glBindBuffer(GL_ARRAY_BUFFER, m_quadVbo);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                          reinterpret_cast<void*>(0));
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                          reinterpret_cast<void*>(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+}
+#endif
+
+GpuCapture::Lease GpuCapture::leaseOldest(uint64_t timeoutNs) {
     if (m_pendingCount == 0) return {};
 
     const int index = m_pending[m_pendingHead];
     Slot& ready = m_slots[index];
 
-    bool signalled = ready.m_fence == nullptr;
     if (ready.m_fence) {
         const GLenum status =
-            glClientWaitSync(ready.m_fence, GL_SYNC_FLUSH_COMMANDS_BIT, 0);
-        signalled =
-            status == GL_ALREADY_SIGNALED || status == GL_CONDITION_SATISFIED;
+            glClientWaitSync(ready.m_fence, GL_SYNC_FLUSH_COMMANDS_BIT,
+                             static_cast<GLuint64>(timeoutNs));
+        if (status != GL_ALREADY_SIGNALED && status != GL_CONDITION_SATISFIED) {
+            if (status == GL_WAIT_FAILED)
+                geode::log::error("glClientWaitSync failed: {}", glGetError());
+            return {};
+        }
+        
+        glDeleteSync(ready.m_fence);
+        ready.m_fence = nullptr;
     }
-    if (!signalled) return {};
 
     glBindBuffer(GL_PIXEL_PACK_BUFFER, ready.m_pbo);
+#ifdef GEODE_IS_MACOS
+    auto* pixels = static_cast<uint8_t*>(
+        glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY));
+#else
     auto* pixels = static_cast<uint8_t*>(
         glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0,
                          static_cast<GLsizeiptr>(m_bufferSize), GL_MAP_READ_BIT));
+#endif
     glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
     m_pendingHead = (m_pendingHead + 1) % RING_SIZE;
@@ -379,8 +428,54 @@ GpuCapture::Lease GpuCapture::leaseOldest() {
     return Lease{pixels, m_bufferSize, index, ready.m_pts};
 }
 
-GpuCapture::Lease GpuCapture::capture(int64_t pts) {
-    if (!hasCapacity()) return {};
+bool GpuCapture::makeRoom(std::vector<Lease>& drained) {
+    if (hasCapacity()) return true;
+
+    
+    
+    
+    
+    constexpr int POLLS = 24;
+    constexpr uint64_t POLL_NS = 1'000'000;  
+    for (int attempt = 0; attempt < POLLS && !hasCapacity(); ++attempt) {
+        if (m_pendingCount > 0) {
+            const Lease lease = leaseOldest(POLL_NS);
+            if (lease.valid()) drained.push_back(lease);
+        } else {
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+    }
+    if (hasCapacity()) return true;
+
+    
+    glFinish();
+    for (int i = 0; i < RING_SIZE && !hasCapacity(); ++i) {
+        const Lease lease = leaseOldest(0);
+        if (!lease.valid()) break;
+        drained.push_back(lease);
+    }
+    if (hasCapacity()) return true;
+
+    
+    for (int attempt = 0; attempt < 50 && !hasCapacity(); ++attempt)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    return hasCapacity();
+}
+
+std::vector<GpuCapture::Lease> GpuCapture::capture(int64_t pts) {
+    std::vector<Lease> leases;
+    if (!m_format || m_bufferSize == 0) return leases;
+
+    if (!makeRoom(leases)) {
+        ++m_droppedFrames;
+        if (m_droppedFrames == 1 || m_droppedFrames % 60 == 0)
+            geode::log::warn(
+                "Recorder ring stayed full after waiting; skipped {} frame(s)",
+                m_droppedFrames);
+        return leases;
+    }
+    m_droppedFrames = 0;
 
     Slot& write = m_slots[m_writeIndex];
     write.m_pts = pts;
@@ -403,7 +498,9 @@ GpuCapture::Lease GpuCapture::capture(int64_t pts) {
     renderScene();
     convertPlanes();
 
+#ifndef GEODE_IS_MACOS
     write.m_fence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+#endif
 
     m_pending[(m_pendingHead + m_pendingCount) % RING_SIZE] = m_writeIndex;
     ++m_pendingCount;
@@ -411,7 +508,13 @@ GpuCapture::Lease GpuCapture::capture(int64_t pts) {
 
     glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
-    const Lease lease = leaseOldest();
+    
+    
+    for (int i = 0; i < RING_SIZE && m_pendingCount > 0; ++i) {
+        const Lease lease = leaseOldest(0);
+        if (!lease.valid()) break;
+        leases.push_back(lease);
+    }
 
     resizeSceneTo(CCSize(static_cast<float>(m_viewWidth),
                          static_cast<float>(m_viewHeight)));
@@ -420,7 +523,22 @@ GpuCapture::Lease GpuCapture::capture(int64_t pts) {
     glUseProgram(0);
     glEnable(GL_BLEND);
 
-    return lease;
+    return leases;
+}
+
+void GpuCapture::saveView() {
+    const CCSize viewSize =
+        CCDirector::sharedDirector()->getOpenGLView()->getFrameSize();
+    m_savedViewWidth = static_cast<uint32_t>(viewSize.width);
+    m_savedViewHeight = static_cast<uint32_t>(viewSize.height);
+}
+
+void GpuCapture::restoreView() {
+    if (!m_savedViewWidth || !m_savedViewHeight) return;
+    resizeSceneTo(CCSize(static_cast<float>(m_savedViewWidth),
+                         static_cast<float>(m_savedViewHeight)));
+    rescaleBackgrounds();
+    glBindFramebuffer(GL_FRAMEBUFFER, m_oldFbo);
 }
 
 std::vector<GpuCapture::Lease> GpuCapture::drainPending() {
@@ -431,7 +549,7 @@ std::vector<GpuCapture::Lease> GpuCapture::drainPending() {
 
     const int queued = m_pendingCount;
     for (int i = 0; i < queued; ++i) {
-        const Lease lease = leaseOldest();
+        const Lease lease = leaseOldest(0);
         if (lease.valid()) leases.push_back(lease);
     }
     return leases;

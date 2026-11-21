@@ -91,9 +91,9 @@ constexpr std::array<uint8_t, 24> a64WordTickLoad(uint64_t patchAt,
     return out.m_bytes;
 }
 
-// Replaces the vanilla accounting-timestep selection (ts = 1/240, warp-scaled)
-// with two doubles written by the mod: [0] = warp, [1] = the mod's timestep.
-// d2 keeps the warp (consumed later), d1 becomes the timestep.
+
+
+
 constexpr std::array<uint8_t, 36> a64TickRateLoad(uint64_t cell) {
     Emitter<36> out;
     a64LoadAddress(out, A64_SCRATCH, cell);

@@ -37,6 +37,10 @@ using namespace geode::prelude;
 static void macosKeybindHandler(int key, bool pressed, bool ctrl, bool shift,
                                 bool alt) {
     auto* bindings = BindingManager::get();
+    if (pressed)
+        geode::log::info("[grape-key] press key={} wantText={} waiting={}",
+                         key, ImGui::GetIO().WantTextInput,
+                         bindings->isWaitingForKey());
     if (bindings->isWaitingForKey()) {
         if (pressed) {
             bindings->setNewKey(static_cast<cocos2d::enumKeyCodes>(key), ctrl,
@@ -44,14 +48,15 @@ static void macosKeybindHandler(int key, bool pressed, bool ctrl, bool shift,
         }
         return;
     }
-    
-    
     if (!pressed) {
         bindings->processKeyEvent(key, false, ctrl, shift, alt);
         return;
     }
-    
-    if (ImGui::GetIO().WantTextInput) return;
+    if (ImGui::GetIO().WantTextInput) {
+        geode::log::info("[grape-key] press swallowed by text input: {}",
+                         key);
+        return;
+    }
     bindings->processKeyEvent(key, true, ctrl, shift, alt);
 }
 

@@ -37,6 +37,10 @@ class FrameEngine {
         bool m_noclip = false;
     } m_toggles;
 
+    
+    
+    
+    std::mutex m_frozenMutex;
     std::forward_list<std::function<void(float)>> m_frozenScheduledFunctions;
 
    public:
@@ -72,6 +76,7 @@ class FrameEngine {
     void afterStep(GJBaseGameLayer* level);
     void portableStepUpdate(PlayLayer* playLayer);
     void scheduleFrozenFunction(std::function<void(float)> task) {
+        std::lock_guard<std::mutex> lock(m_frozenMutex);
         m_frozenScheduledFunctions.push_front(std::move(task));
     }
 
@@ -98,8 +103,8 @@ class FrameEngine {
     int estimatedStepCount = 1;
     uint32_t m_stepLimit = 1;
 
-    // Diagnostics for the macOS TPS log: which runner drove the last update,
-    // how many steps it asked for, and the tick count the game actually got.
+    
+    
     int m_diagPath = 0;
     int m_diagSteps = 0;
     int m_diagForced = 0;

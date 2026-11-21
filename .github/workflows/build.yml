@@ -1,0 +1,81 @@
+name: Build Geode Mod
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Run standalone tests
+        run: |
+          set -euxo pipefail
+          git clone --filter=blob:none https://github.com/stephenberry/glaze.git /tmp/glaze
+          git -C /tmp/glaze checkout 3bfd53e70db09247f3726a65abd7c7c2414a1601
+          g++ -std=c++23 -Wall -Wextra -pedantic -Isrc tests/atomic_file.cpp -o /tmp/atomic-file-test
+          g++ -std=c++23 -Wall -Wextra -pedantic -Isrc -I/tmp/glaze/include tests/keybind.cpp -o /tmp/keybind-test
+          /tmp/atomic-file-test
+          /tmp/keybind-test
+
+  build:
+    needs: unit-tests
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: Android32
+          os: ubuntu-latest
+          target: Android32
+        - name: Android64
+          os: ubuntu-latest
+          target: Android64
+        - name: macOS
+          os: macos-latest
+        - name: iOS
+          os: macos-latest
+          target: iOS
+        - name: Windows
+          os: windows-latest
+          target: Win64
+          path: pc
+
+    name: Build ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+
+    # Windows is built from the private pc/ configuration; skip the job
+    # until that directory exists in this repository.
+    if: ${{ matrix.config.name != 'Windows' || hashFiles('pc/CMakeLists.txt') != '' }}
+
+    steps:
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+    - name: Build Mod
+      uses: geode-sdk/build-geode-mod@963ac394ad1773b6ea5b0f96aade52a44c6a4770
+      with:
+        bindings: geode-sdk/bindings
+        bindings-ref: main
+        sdk: given
+        android-ndk-version: 28.2.13676358
+        combine: true
+        target: ${{ matrix.config.target }}
+        path: ${{ matrix.config.path || './' }}
+
+  package:
+    name: Package Geode Mod
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: geode-sdk/build-geode-mod/combine@963ac394ad1773b6ea5b0f96aade52a44c6a4770
+        id: build
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: Mod Output
+          path: ${{ steps.build.outputs.build-output }}
+          retention-days: 3

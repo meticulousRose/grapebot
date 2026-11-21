@@ -69,19 +69,35 @@ struct GrapePlayLayer : Modify<GrapePlayLayer, PlayLayer> {
     CheckpointObject* markCheckpoint() {
         if (!bot().isEnabled()) return PlayLayer::markCheckpoint();
 #ifdef GEODE_IS_MACOS
-        // GD asks for checkpoints mid-step, and the Z-key path can race the
-        // physics thread, so the snapshot lands a frame off from what is on
-        // screen and can catch half-updated velocity. Place it at the frozen
-        // tick (right after the frame renders) like the Windows queueCheckpoint
-        // detour. Dedupe by frame so a lost callback can never wedge placement.
+        
+        
+        
+        
+        
         const uint64_t frame = bot().timeline().getFrame();
+        geode::log::info("[grape-cp] request frame={} queuedFrame={} dead={}",
+                         frame, m_fields->m_checkpointQueuedFrame,
+                         grape::snap::deathBlocksCheckpoint(this));
         if (m_fields->m_checkpointQueuedFrame == frame) return nullptr;
         if (grape::snap::deathBlocksCheckpoint(this)) return nullptr;
         m_fields->m_checkpointQueuedFrame = frame;
         bot().timeline().scheduleFrozenFunction([this](float) {
-            if (!bot().isEnabled() || PlayLayer::get() != this) return;
-            if (grape::snap::deathBlocksCheckpoint(this)) return;
-            PlayLayer::markCheckpoint();
+            if (!bot().isEnabled() || PlayLayer::get() != this) {
+                geode::log::info("[grape-cp] frozen skip enabled={} layer={}",
+                                 bot().isEnabled(), PlayLayer::get() == this);
+                return;
+            }
+            if (grape::snap::deathBlocksCheckpoint(this)) {
+                geode::log::info("[grape-cp] frozen skip dead");
+                return;
+            }
+            
+            
+            
+            CheckpointObject* checkpoint = createCheckpoint();
+            storeCheckpoint(checkpoint);
+            geode::log::info("[grape-cp] frozen placed={}",
+                             static_cast<void*>(checkpoint));
         });
         return nullptr;
 #else

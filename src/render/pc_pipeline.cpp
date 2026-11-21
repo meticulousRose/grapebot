@@ -15,10 +15,46 @@ geode::Result<> PcPipeline::start(Config const& config) {
         m_failure.clear();
     }
 
+    m_hasAudio = config.m_audio && config.m_sampleRate > 0 &&
+                 config.m_channels > 0;
+    m_sourceRate = config.m_sampleRate;
+    m_sourceChannels = config.m_channels;
+
+#if defined(GEODE_IS_MACOS)
+    if (config.m_forceNativeEncoder || m_api.load().isErr()) {
+        m_native = true;
+        m_format = nullptr;
+
+        if (auto capture = m_capture.init(
+                &FORMAT_RGB0, static_cast<uint32_t>(config.m_width),
+                static_cast<uint32_t>(config.m_height));
+            capture.isErr())
+            return geode::Err(capture.unwrapErr());
+
+        if (!m_writer) m_writer = std::make_unique<IOSVideoWriter>();
+        auto output = config.m_outputPath;
+        output.replace_extension(".mp4");
+        if (auto opened = m_writer->open(
+                output, config.m_width, config.m_height, config.m_fps,
+                static_cast<uint32_t>(std::max<int64_t>(config.m_bitrate,
+                                                        1'000'000)),
+                config.m_sampleRate, config.m_channels, m_hasAudio);
+            opened.isErr())
+            return geode::Err(opened.unwrapErr());
+
+        m_framesEncoded.store(0, std::memory_order_relaxed);
+        m_draining.store(false, std::memory_order_release);
+        m_running.store(true, std::memory_order_release);
+        m_encoderThread = std::thread(&PcPipeline::encoderLoop, this);
+        return geode::Ok();
+    }
+    m_native = false;
+#else
+    GEODE_UNWRAP(m_api.load());
+#endif
+
     m_format = formatFor(config.m_pixelFormat);
     if (!m_format) return geode::Err("Unsupported pixel format");
-
-    GEODE_UNWRAP(m_api.load());
 
     std::error_code ignored;
     std::filesystem::create_directories(config.m_outputPath.parent_path(),
@@ -93,22 +129,55 @@ geode::Result<> PcPipeline::start(Config const& config) {
 bool PcPipeline::submitFrame(int64_t pts) {
     if (!m_running.load(std::memory_order_acquire)) return false;
 
-    if (!m_capture.hasCapacity()) return false;
+#if defined(GEODE_IS_MACOS)
+    if (m_native) return submitNativeFrame(pts);
+#endif
 
-    const GpuCapture::Lease lease = m_capture.capture(pts);
-    if (!lease.valid()) return true;
+    std::vector<GpuCapture::Lease> leases = m_capture.capture(pts);
+    if (leases.empty()) return true;
 
     {
         std::lock_guard<std::mutex> lock(m_queueMutex);
-        m_queue.push_back(Pending{lease, lease.m_pts});
+        for (GpuCapture::Lease const& lease : leases)
+            m_queue.push_back(Pending{lease, lease.m_pts});
     }
     m_queueCv.notify_one();
     return true;
 }
 
+#if defined(GEODE_IS_MACOS)
+bool PcPipeline::submitNativeFrame(int64_t pts) {
+    std::vector<GpuCapture::Lease> leases = m_capture.capture(pts);
+    for (GpuCapture::Lease& lease : leases) {
+        m_nativeFrame.assign(lease.m_data, lease.m_data + lease.m_size);
+        auto appended = m_writer->appendRGBA(m_nativeFrame);
+        m_capture.release(lease.m_slot);
+        if (appended.isErr()) {
+            recordFailure(appended.unwrapErr());
+            m_running.store(false, std::memory_order_release);
+            return false;
+        }
+        if (appended.isOk() && appended.unwrap())
+            m_framesEncoded.fetch_add(1, std::memory_order_relaxed);
+    }
+    return true;
+}
+#endif
+
 geode::Result<> PcPipeline::submitAudio(float const* samples,
                                         size_t sampleCount, int64_t pts) {
     if (!m_hasAudio) return geode::Ok();
+#if defined(GEODE_IS_MACOS)
+    if (m_native) {
+        if (!m_running.load(std::memory_order_acquire) &&
+            !m_draining.load(std::memory_order_acquire))
+            return geode::Ok();
+        auto appended = m_writer->appendAudio(
+            std::vector<float>(samples, samples + sampleCount));
+        if (appended.isErr()) return geode::Err(appended.unwrapErr());
+        return geode::Ok();
+    }
+#endif
     if (!m_running.load(std::memory_order_acquire) &&
         !m_draining.load(std::memory_order_acquire)) {
         return geode::Ok();
@@ -120,6 +189,9 @@ geode::Result<> PcPipeline::submitAudio(float const* samples,
 }
 
 int PcPipeline::audioFrameSize() const {
+#if defined(GEODE_IS_MACOS)
+    if (m_native) return m_hasAudio ? 1024 : 0;
+#endif
     return m_hasAudio ? m_audio.frameSize() : 0;
 }
 
@@ -129,6 +201,20 @@ size_t PcPipeline::backlog() const {
 }
 
 void PcPipeline::encoderLoop() {
+#if defined(GEODE_IS_MACOS)
+    if (m_native) {
+        {
+            std::unique_lock<std::mutex> lock(m_queueMutex);
+            m_queueCv.wait(lock, [this] {
+                return !m_running.load(std::memory_order_acquire);
+            });
+        }
+        if (auto finished = m_writer->finish(); finished.isErr())
+            recordFailure(finished.unwrapErr());
+        m_draining.store(false, std::memory_order_release);
+        return;
+    }
+#endif
     for (;;) {
         Pending pending;
         {
@@ -206,6 +292,30 @@ void PcPipeline::requestStop() {
 }
 
 void PcPipeline::shutdown() {
+#if defined(GEODE_IS_MACOS)
+    if (m_native) {
+        if (m_running.load(std::memory_order_acquire)) {
+            std::vector<GpuCapture::Lease> tail = m_capture.drainPending();
+            for (GpuCapture::Lease& lease : tail) {
+                m_nativeFrame.assign(lease.m_data,
+                                     lease.m_data + lease.m_size);
+                if (auto appended = m_writer->appendRGBA(m_nativeFrame);
+                    appended.isErr())
+                    recordFailure(appended.unwrapErr());
+                else if (appended.isOk() && appended.unwrap())
+                    m_framesEncoded.fetch_add(1, std::memory_order_relaxed);
+                m_capture.release(lease.m_slot);
+            }
+        }
+
+        requestStop();
+
+        if (m_encoderThread.joinable()) m_encoderThread.join();
+
+        teardown();
+        return;
+    }
+#endif
     if (m_running.load(std::memory_order_acquire)) {
         std::vector<GpuCapture::Lease> tail = m_capture.drainPending();
         if (!tail.empty()) {
@@ -231,6 +341,19 @@ void PcPipeline::shutdown() {
 
 void PcPipeline::teardown() {
     m_capture.destroy();
+#if defined(GEODE_IS_MACOS)
+    if (m_native) {
+        m_writer.reset();
+        m_native = false;
+        m_hasAudio = false;
+        m_sourceRate = 0;
+        m_sourceChannels = 0;
+        m_format = nullptr;
+        m_draining.store(false, std::memory_order_release);
+        m_running.store(false, std::memory_order_release);
+        return;
+    }
+#endif
     m_video.close();
     m_audio.close();
     m_muxer.close();

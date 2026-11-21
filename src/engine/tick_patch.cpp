@@ -32,9 +32,9 @@ Cell* g_target = &g_cell;
 bool g_patched = false;
 bool g_tried = false;
 
-// Written by setTickRate, read by the patched accounting block:
-// [0] = warp (the vanilla code converted this from the layer's float),
-// [1] = the timestep the delta accounting quantizes to.
+
+
+
 double g_tickTime[2] = {1.0, 1.0 / 240.0};
 
 using arm::ANY;
@@ -65,9 +65,9 @@ uintptr_t updateAddress() {
 
 constexpr uintptr_t MAC_UPDATE = 0x10663c;
 
-// The delta-accounting timestep selection inside update(): ts = warp < 1
-// ? warp / 240 : 1 / 240. Replaced with two mod-written doubles so the
-// accounting quantizes to the mod's TPS instead of vanilla's 240 Hz.
+
+
+
 constexpr uintptr_t MAC_TICK_RATE = 0x1068a0;
 constexpr std::array<uint8_t, 36> MAC_TICK_RATE_ORIGINAL = {
     0x61, 0x32, 0x43, 0xbd, 0x22, 0xc0, 0x22, 0x1e, 0xe9, 0xe3, 0x00,
@@ -91,10 +91,10 @@ bool installPlatform() {
                    arm::a64SingleTickLoad(
                        reinterpret_cast<uintptr_t>(&g_cell)));
 
-    // Accounting timestep: verify the original bytes first so a game update
-    // can never get a blind write. Without it the tick count still works, but
-    // deltas quantize to 240 Hz (frame advance and non-integer steps/frame
-    // drift at high TPS).
+    
+    
+    
+    
     const auto* rateSite =
         reinterpret_cast<const uint8_t*>(base + MAC_TICK_RATE);
     if (std::memcmp(rateSite, MAC_TICK_RATE_ORIGINAL.data(), 36) == 0) {

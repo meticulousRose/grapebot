@@ -12,71 +12,91 @@ extern "C" {
 
 namespace grape::render {
 
-inline constexpr char const* PLANE_VERTEX_SHADER = R"(#version 130
-in vec4 a_position;
-in vec2 a_texCoord;
-out vec2 v_texCoord;
+#ifdef GEODE_IS_MACOS
+// GD's macOS GL context is legacy 2.1 (GLSL 120): no #version directive,
+// attribute/varying, gl_FragColor, texture2D.
+#define GRAPE_GLSL ""
+#define GRAPE_VERT_IN "attribute"
+#define GRAPE_VERT_OUT "varying"
+#define GRAPE_FRAG_IN "varying"
+#define GRAPE_FRAG_PRELUDE ""
+#define GRAPE_TEX_SAMPLE "texture2D(u_texture, v_texCoord)"
+#define GRAPE_FRAG_WRITE(value) "gl_FragColor = (" value ");"
+#else
+#define GRAPE_GLSL "#version 130\n"
+#define GRAPE_VERT_IN "in"
+#define GRAPE_VERT_OUT "out"
+#define GRAPE_FRAG_IN "in"
+#define GRAPE_FRAG_PRELUDE ""
+#define GRAPE_TEX_SAMPLE "texture2D(u_texture, v_texCoord)"
+#define GRAPE_FRAG_WRITE(value) "gl_FragData[0] = (" value ");"
+#endif
+
+inline constexpr char const* PLANE_VERTEX_SHADER = GRAPE_GLSL R"(
+)" GRAPE_VERT_IN R"( vec4 a_position;
+)" GRAPE_VERT_IN R"( vec2 a_texCoord;
+)" GRAPE_VERT_OUT R"( vec2 v_texCoord;
 void main() {
     gl_Position = vec4(a_position.xy, 0.0, 1.0);
     v_texCoord = vec2(a_texCoord.x, 1.0 - a_texCoord.y);
 }
 )";
 
-inline constexpr char const* FADE_FRAGMENT_SHADER = R"(#version 130
-precision highp float;
+inline constexpr char const* FADE_FRAGMENT_SHADER =
+    GRAPE_GLSL GRAPE_FRAG_PRELUDE R"(
 uniform vec4 u_color;
 void main() {
-    gl_FragData[0] = u_color;
+    )" GRAPE_FRAG_WRITE(R"(u_color)") R"(
 }
 )";
 
-inline constexpr char const* SHADER_Y = R"(#version 130
-precision highp float;
-in vec2 v_texCoord;
+inline constexpr char const* SHADER_Y =
+    GRAPE_GLSL GRAPE_FRAG_PRELUDE R"(
+)" GRAPE_FRAG_IN R"( vec2 v_texCoord;
 uniform sampler2D u_texture;
 const vec3 coeffY = vec3(0.2126, 0.7152, 0.0722);
 void main() {
-    vec3 rgb = texture2D(u_texture, v_texCoord).rgb;
+    vec3 rgb = )" GRAPE_TEX_SAMPLE R"(.rgb;
     float y = dot(rgb, coeffY) * 219.0 / 255.0 + 16.0 / 255.0;
-    gl_FragData[0] = vec4(y, 0.0, 0.0, 1.0);
+    )" GRAPE_FRAG_WRITE(R"(vec4(y, 0.0, 0.0, 1.0))") R"(
 }
 )";
 
-inline constexpr char const* SHADER_UV = R"(#version 130
-precision highp float;
-in vec2 v_texCoord;
+inline constexpr char const* SHADER_UV =
+    GRAPE_GLSL GRAPE_FRAG_PRELUDE R"(
+)" GRAPE_FRAG_IN R"( vec2 v_texCoord;
 uniform sampler2D u_texture;
 const vec3 coeffU = vec3(-0.11457, -0.38543, 0.5);
 const vec3 coeffV = vec3(0.5, -0.45415, -0.04585);
 void main() {
-    vec3 rgb = texture2D(u_texture, v_texCoord).rgb;
+    vec3 rgb = )" GRAPE_TEX_SAMPLE R"(.rgb;
     float u = (dot(rgb, coeffU) + 0.5) * 224.0 / 255.0 + 16.0 / 255.0;
     float v = (dot(rgb, coeffV) + 0.5) * 224.0 / 255.0 + 16.0 / 255.0;
-    gl_FragData[0] = vec4(u, v, 0.0, 1.0);
+    )" GRAPE_FRAG_WRITE(R"(vec4(u, v, 0.0, 1.0))") R"(
 }
 )";
 
-inline constexpr char const* SHADER_U = R"(#version 130
-precision highp float;
-in vec2 v_texCoord;
+inline constexpr char const* SHADER_U =
+    GRAPE_GLSL GRAPE_FRAG_PRELUDE R"(
+)" GRAPE_FRAG_IN R"( vec2 v_texCoord;
 uniform sampler2D u_texture;
 const vec3 coeffU = vec3(-0.11457, -0.38543, 0.5);
 void main() {
-    vec3 rgb = texture2D(u_texture, v_texCoord).rgb;
+    vec3 rgb = )" GRAPE_TEX_SAMPLE R"(.rgb;
     float u = (dot(rgb, coeffU) + 0.5) * 224.0 / 255.0 + 16.0 / 255.0;
-    gl_FragData[0] = vec4(u, 0.0, 0.0, 1.0);
+    )" GRAPE_FRAG_WRITE(R"(vec4(u, 0.0, 0.0, 1.0))") R"(
 }
 )";
 
-inline constexpr char const* SHADER_V = R"(#version 130
-precision highp float;
-in vec2 v_texCoord;
+inline constexpr char const* SHADER_V =
+    GRAPE_GLSL GRAPE_FRAG_PRELUDE R"(
+)" GRAPE_FRAG_IN R"( vec2 v_texCoord;
 uniform sampler2D u_texture;
 const vec3 coeffV = vec3(0.5, -0.45415, -0.04585);
 void main() {
-    vec3 rgb = texture2D(u_texture, v_texCoord).rgb;
+    vec3 rgb = )" GRAPE_TEX_SAMPLE R"(.rgb;
     float v = (dot(rgb, coeffV) + 0.5) * 224.0 / 255.0 + 16.0 / 255.0;
-    gl_FragData[0] = vec4(v, 0.0, 0.0, 1.0);
+    )" GRAPE_FRAG_WRITE(R"(vec4(v, 0.0, 0.0, 1.0))") R"(
 }
 )";
 
@@ -89,9 +109,9 @@ struct PlaneSpec {
 };
 
 struct FormatSpec {
-    AVPixelFormat m_pixelFormat = AV_PIX_FMT_NONE;
+    AVPixelFormat m_pixelFormat = AV_PIX_FMT_YUV420P;
     uint32_t m_planeCount = 0;
-    std::array<PlaneSpec, 3> m_planes{};
+    PlaneSpec m_planes[3]{};
 
     uint32_t planeWidth(uint32_t index, uint32_t alignedWidth) const {
         return alignedWidth >> m_planes[index].m_widthShift;

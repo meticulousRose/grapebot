@@ -1,5 +1,8 @@
 #include "renderer.hpp"
 #include "util/storage.hpp"
+#ifdef GEODE_IS_MACOS
+#include "ui/macos_input.hpp"
+#endif
 
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCDirector.hpp>
@@ -1048,11 +1051,23 @@ geode::Result<> Renderer::start() {
 
     if (!m_av.loaded()) loadFFmpeg();
 
-    GEODE_UNWRAP_INTO(const std::string videoCodec, resolveVideoCodec());
-    if (videoCodec != m_settings.m_codec) {
-        geode::log::warn("Encoder '{}' is unavailable; rendering with '{}'",
-                         m_settings.m_codec, videoCodec);
-        if (!m_settings.m_forceCodec) m_settings.m_codec = videoCodec;
+    std::string videoCodec;
+    bool nativeEncoder = false;
+    if (auto resolved = resolveVideoCodec(); resolved.isErr()) {
+#if defined(GEODE_IS_MACOS)
+        geode::log::warn("No FFmpeg encoders available; rendering with the native encoder");
+        nativeEncoder = true;
+        videoCodec = "h264 (native)";
+#else
+        return geode::Err(resolved.unwrapErr());
+#endif
+    } else {
+        videoCodec = resolved.unwrap();
+        if (videoCodec != m_settings.m_codec) {
+            geode::log::warn("Encoder '{}' is unavailable; rendering with '{}'",
+                             m_settings.m_codec, videoCodec);
+            if (!m_settings.m_forceCodec) m_settings.m_codec = videoCodec;
+        }
     }
 
     grape::render::PcPipeline::Config config;
@@ -1066,6 +1081,7 @@ geode::Result<> Renderer::start() {
     config.m_fps = m_settings.m_fps;
     config.m_bitrate = static_cast<int64_t>(m_settings.m_bitrate);
     config.m_pixelFormat = m_settings.m_pixFmt;
+    config.m_forceNativeEncoder = nativeEncoder;
     config.m_audio = m_settings.m_renderAudio;
     config.m_sampleRate = m_sampleRate;
     config.m_channels = m_channels;
@@ -1074,6 +1090,10 @@ geode::Result<> Renderer::start() {
         m_pipeline = std::make_unique<grape::render::PcPipeline>();
 
     GEODE_UNWRAP(m_pipeline->start(config));
+    m_pipeline->saveView();
+#if defined(GEODE_IS_MACOS)
+    grape::ui::macSaveWindowFrame();
+#endif
 
     if (m_settings.m_renderAudio) {
         if (!audioRecorder->init() ||
@@ -1160,6 +1180,10 @@ geode::Result<> Renderer::stop() {
 
     std::string error;
     if (m_pipeline) {
+        m_pipeline->restoreView();
+#if defined(GEODE_IS_MACOS)
+        grape::ui::macRestoreWindowFrame();
+#endif
         m_pipeline->shutdown();
         error = m_pipeline->failure();
     }

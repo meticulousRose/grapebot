@@ -2955,7 +2955,15 @@ void UIManager::draw() {
                         slui::text("Waiting to enter level...");
                     } else if (PlayLayer::get()) {
                         if (slui::raw_button("Start Here", fullWidth)) {
-                            (void)renderer->start();
+                            if (auto result = renderer->start(); result.isErr()) {
+                                geode::log::error(
+                                    "Failed to start recording: {}",
+                                    result.unwrapErr());
+                                geode::Notification::create(
+                                    result.unwrapErr(),
+                                    geode::NotificationIcon::Error, 6.0f)
+                                    ->show();
+                            }
                         }
                     }
                 }

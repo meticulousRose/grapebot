@@ -121,7 +121,7 @@ if (NOT GRAPE_MOBILE)
     )
 endif()
 
-if (GEODE_TARGET_PLATFORM STREQUAL "iOS")
+if (APPLE)
     target_sources(${PROJECT_NAME} PRIVATE src/render/ios_video_writer.mm)
     set_source_files_properties(src/render/ios_video_writer.mm PROPERTIES
         COMPILE_OPTIONS "-fobjc-arc"

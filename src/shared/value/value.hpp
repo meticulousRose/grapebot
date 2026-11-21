@@ -4,6 +4,7 @@
 #include <glaze/json/read.hpp>
 
 #include <algorithm>
+#include <chrono>
 #include <array>
 #include <filesystem>
 #include <functional>
@@ -115,7 +116,10 @@ class BindingManager {
                 for (const auto& keybind : found->second) {
                     const auto& tag = keybind->getTag();
                     if (tag == "updater.advance_one" || tag == "updater.advance_back")
-                        return KeyPressTracker::RepeatTiming{100, 25};
+                        
+                        
+                        
+                        return KeyPressTracker::RepeatTiming{500, 50};
                 }
             }
             return KeyPressTracker::RepeatTiming{holdDelayMs, repeatMs};
@@ -175,7 +179,11 @@ class BindingManager {
         }
     }
 
-    void wantNewKey() { m_capture = {.m_waiting = true}; }
+    void wantNewKey() {
+        m_capture = {.m_waiting = true};
+        m_capture.m_deadline =
+            std::chrono::steady_clock::now() + std::chrono::seconds(3);
+    }
     void cancelNewKey() { m_capture = {}; }
 
     void setNewKey(cocos2d::enumKeyCodes key, bool ctrl, bool shift, bool alt) {
@@ -193,7 +201,14 @@ class BindingManager {
     }
 
     int getNewModifiers() const { return m_capture.m_modifiers; }
-    bool isWaitingForKey() const { return m_capture.m_waiting; }
+    bool isWaitingForKey() {
+        if (!m_capture.m_waiting) return false;
+        if (std::chrono::steady_clock::now() >= m_capture.m_deadline) {
+            m_capture = {};
+            return false;
+        }
+        return true;
+    }
     bool hasNewKey() const { return m_capture.m_received; }
 
    private:
@@ -202,6 +217,7 @@ class BindingManager {
         bool m_received = false;
         cocos2d::enumKeyCodes m_key = cocos2d::enumKeyCodes::KEY_None;
         int m_modifiers = 0;
+        std::chrono::steady_clock::time_point m_deadline{};
     };
 
     BindingManager() = default;
@@ -214,13 +230,22 @@ class BindingManager {
 
     void dispatch(int chord, bool pressed) {
         const auto keybinds = m_byChord.find(chord);
-        if (keybinds == m_byChord.end()) return;
+        if (keybinds == m_byChord.end()) {
+            if (pressed)
+                geode::log::info("[grape-key] dispatch: no binding for chord {:x}",
+                                 chord);
+            return;
+        }
         for (const auto& keybind : keybinds->second) {
             if (!tagAllowed(keybind->getTag())) continue;
             const auto binding = m_bindings.find(keybind->getTag());
             if (binding == m_bindings.end()) continue;
-            if (keybind->applyValue(pressed, binding->second->getValue(), binding->second->getPrevious()))
-                binding->second->notifyChange();
+            const bool changed = keybind->applyValue(
+                pressed, binding->second->getValue(), binding->second->getPrevious());
+            if (pressed)
+                geode::log::info("[grape-key] dispatch tag={} changed={}",
+                                 keybind->getTag(), changed);
+            if (changed) binding->second->notifyChange();
         }
     }
 

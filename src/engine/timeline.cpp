@@ -68,8 +68,8 @@ void runToNextInputs(float realDt, const Update& update) {
 
     if (!director.m_head.peek()) {
         if (timeline.estimatedStepCount >= 1) {
-            // The tick-count patch reads m_forcedTicks: without setting it the
-            // game runs ONE step of the whole batch delta and high TPS collapses.
+            
+            
             timeline.m_forcedTicks = timeline.estimatedStepCount;
             update(static_cast<float>(tick * timeline.estimatedStepCount));
             timeline.m_forcedTicks = 1;
@@ -279,8 +279,8 @@ void FrameEngine::runUpdates(std::function<void(float)> update, float realDt, bo
         m_shouldRender = true;
         m_diagPath = 4;
         m_diagSteps = 1;
-        // One physics frame at the configured TPS when the tick patch can
-        // force the exact count; vanilla otherwise only steps on 240 Hz.
+        
+        
         const double stepTime = grape::ticks::patched()
             ? grape::ticks::timestep(m_tps->inner(),
                                      play->m_gameState.m_timeWarp)
@@ -340,12 +340,16 @@ void FrameEngine::runUpdates(std::function<void(float)> update, float realDt, bo
 }
 
 void FrameEngine::runFrozenTick() {
-    if (m_frozenScheduledFunctions.empty()) return;
-    // Move the queue out before running: tasks scheduled during the tick (the
-    // refresh pass runs a zero-delta game step, which can queue more work) must
-    // survive to the next tick instead of being wiped by the clear below.
-    auto scheduled = std::move(m_frozenScheduledFunctions);
-    m_frozenScheduledFunctions.clear();
+    std::forward_list<std::function<void(float)>> scheduled;
+    {
+        std::lock_guard<std::mutex> lock(m_frozenMutex);
+        if (m_frozenScheduledFunctions.empty()) return;
+        scheduled = std::move(m_frozenScheduledFunctions);
+        m_frozenScheduledFunctions.clear();
+    }
+    
+    
+    
     for (auto& task : scheduled) task(0.0f);
     runUpdates([](float dt) { CCDirector::sharedDirector()->getScheduler()->update(dt); },
                0.0f, true);

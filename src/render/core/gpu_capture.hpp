@@ -29,7 +29,11 @@ class GpuCapture {
                          uint32_t height);
     void destroy();
 
-    Lease capture(int64_t pts);
+    
+    
+    
+    
+    std::vector<Lease> capture(int64_t pts);
 
     void release(int slot);
 
@@ -40,6 +44,13 @@ class GpuCapture {
         if (m_pendingCount >= RING_SIZE) return false;
         return !m_slots[m_writeIndex].m_leased.load(std::memory_order_acquire);
     }
+
+    bool hasPendingReadback() const { return m_pendingCount > 0; }
+
+    // Snapshots the game view size at record start and restores it (the
+    // capture loop temporarily rescales the view for the render resolution).
+    void saveView();
+    void restoreView();
 
     void displayPreview();
 
@@ -76,7 +87,17 @@ class GpuCapture {
         std::atomic<bool> m_leased{false};
     };
 
-    Lease leaseOldest();
+    
+    Lease leaseOldest(uint64_t timeoutNs);
+
+#if defined(GEODE_IS_MACOS)
+    void bindQuad();
+#endif
+
+    
+    
+    
+    bool makeRoom(std::vector<Lease>& drained);
 
     geode::Result<> buildSceneTarget();
     geode::Result<> buildFadeProgram();
@@ -103,11 +124,14 @@ class GpuCapture {
     int m_pending[RING_SIZE] = {};
     int m_pendingHead = 0;
     int m_pendingCount = 0;
+    int m_droppedFrames = 0;
 
     uint32_t m_width = 0;
     uint32_t m_height = 0;
     uint32_t m_viewWidth = 0;
     uint32_t m_viewHeight = 0;
+    uint32_t m_savedViewWidth = 0;
+    uint32_t m_savedViewHeight = 0;
 
     int m_oldFbo = 0;
 };
