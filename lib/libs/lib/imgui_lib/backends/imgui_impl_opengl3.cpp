@@ -297,6 +297,21 @@ bool ImGui_ImplOpenGL3_InitLoader()
     return true;
 }
 
+// glFinish() is a GL 1.x entry point and is not part of the stripped loader,
+// so resolve it through the loader's own procedure lookup when it is in use.
+static void ImGui_ImplOpenGL3_Finish()
+{
+#ifdef IMGUI_IMPL_OPENGL_LOADER_IMGL3W
+    static GL3WglProc finish = NULL;
+    if (finish == NULL)
+        finish = imgl3wGetProcAddress("glFinish");
+    if (finish != NULL)
+        ((void (APIENTRYP)(void))finish)();
+#else
+    glFinish();
+#endif
+}
+
 // Functions
 bool    ImGui_ImplOpenGL3_Init(const char* glsl_version)
 {
@@ -734,7 +749,7 @@ void ImGui_ImplOpenGL3_UpdateTexture(ImTextureData* tex)
         GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex->Width, tex->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels));
         // ponytail: Intel drivers may defer reading client memory until
         // SwapBuffers; font uploads are rare, so finish before ImGui mutates it.
-        GL_CALL(glFinish());
+        GL_CALL(ImGui_ImplOpenGL3_Finish());
 
         // Store identifiers
         tex->SetTexID((ImTextureID)(intptr_t)gl_texture_id);
@@ -760,7 +775,7 @@ void ImGui_ImplOpenGL3_UpdateTexture(ImTextureData* tex)
         GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex->Width,
                             tex->Height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                             tex->GetPixels()));
-        GL_CALL(glFinish());
+        GL_CALL(ImGui_ImplOpenGL3_Finish());
         tex->SetStatus(ImTextureStatus_OK);
         GL_CALL(glBindTexture(GL_TEXTURE_2D, last_texture)); // Restore state
     }
