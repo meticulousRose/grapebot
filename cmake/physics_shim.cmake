@@ -9,3 +9,19 @@ foreach(header ${GRAPE_PHYSICS_HEADERS})
         file(WRITE "${header}" "${contents}")
     endif()
 endforeach()
+
+# MSVC odr-uses &Base::Function in the GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_*
+# helpers even though they only feed a static_assert, and the Windows bindings
+# do not define the functions that have no address there, which turns every
+# such helper into an unresolved symbol at link time. The static_asserts are
+# compile-time diagnostics only, so the invocations can be dropped.
+file(GLOB GRAPE_MODIFY_HEADERS "${BINDINGS_DIR}/modify*/*.hpp")
+foreach(header ${GRAPE_MODIFY_HEADERS})
+    file(READ "${header}" contents)
+    if (NOT contents MATCHES "GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_(DEFINED|INLINE)\\(")
+        continue()
+    endif()
+    string(REGEX REPLACE "GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_DEFINED\\([^\n]*\\)" "" contents "${contents}")
+    string(REGEX REPLACE "GEODE_APPLY_MODIFY_FOR_FUNCTION_ERROR_INLINE\\([^\n]*\\)" "" contents "${contents}")
+    file(WRITE "${header}" "${contents}")
+endforeach()

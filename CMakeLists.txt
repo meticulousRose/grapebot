@@ -244,7 +244,7 @@ if (APPLE)
 endif()
 
 
-if (GRAPE_MOBILE OR GRAPE_PC OR APPLE)
+if (GRAPE_MOBILE OR GRAPE_PC OR APPLE OR WIN32)
     include(FetchContent)
     FetchContent_Declare(grape_lua
         URL https://www.lua.org/ftp/lua-5.4.8.tar.gz
