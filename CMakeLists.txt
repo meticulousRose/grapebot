@@ -529,10 +529,14 @@ if (BUILD_TESTING AND NOT ANDROID AND NOT APPLE)
     target_include_directories(grape_notifications_test PRIVATE src)
     add_test(NAME grape.notifications COMMAND grape_notifications_test)
 
-    add_executable(grape_gltf_test tests/gltf.cpp)
-    target_include_directories(grape_gltf_test PRIVATE src pc/src)
-    target_link_libraries(grape_gltf_test PRIVATE glaze::glaze)
-    add_test(NAME grape.gltf COMMAND grape_gltf_test)
+    # The GLTF exporter test needs the private pc/ header; only tested when
+    # the pc overlay exists (Windows builds with it).
+    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pc/src/gltf.hpp")
+        add_executable(grape_gltf_test tests/gltf.cpp)
+        target_include_directories(grape_gltf_test PRIVATE src pc/src)
+        target_link_libraries(grape_gltf_test PRIVATE glaze::glaze)
+        add_test(NAME grape.gltf COMMAND grape_gltf_test)
+    endif()
 
     add_executable(grape_vine_slc_test tests/vine_slc.cpp)
     target_include_directories(grape_vine_slc_test PRIVATE src)
