@@ -2,312 +2,32 @@ Run geode-sdk/build-geode-mod@963ac394ad1773b6ea5b0f96aade52a44c6a4770
 Detect platform
 0s
 Setup sccache
-2s
+3s
 Setup CPM Cache
 1s
 Install Ninja
-1s
+0s
 Download bindings repo
 5s
-Run actions/checkout@v7
-  Syncing repository: geode-sdk/bindings
-Getting Git version info
-  Temporarily overriding HOME='D:\a\_temp\d04bb835-eacf-4100-a190-e8d31bc93d6a' before making global git config changes
-  Adding repository directory to the temporary git global config as a safe directory
-  "C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\grapebot\grapebot\bindings-repo
-Determining repository object format
-Initializing the repository
-Disabling automatic garbage collection
-Setting up auth
-Fetching the repository
-Determining the checkout info
-  "C:\Program Files\Git\bin\git.exe" sparse-checkout disable
-  From https://github.com/geode-sdk/bindings
-   * [new branch]      main       -> origin/main
-  
-Determining the checkout info
-  "C:\Program Files\Git\bin\git.exe" sparse-checkout disable
-  "C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
-Checking out the ref
-    "C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
-    Switched to a new branch 'main'
-    branch 'main' set up to track 'origin/main'.
-  "C:\Program Files\Git\bin\git.exe" log -1 --format=%H
-  45f96f1971b289d75ef17ea0ae72dd676f972061
 Setup bindings enviroment
 0s
-Run echo "GEODE_BINDINGS_REPO_PATH=$GITHUB_WORKSPACE/bindings-repo" >> $GITHUB_ENV
-    
 Setup CLI
 1s
-Run geode-sdk/cli/.github/actions/setup@main
-Detect platform
-0s
-Download
-1s
-Run robinraju/release-downloader@v1.13
-    Fetching latest release for repo geode-sdk/cli
-    (node:8720) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
-    (Use `node --trace-deprecation ...` to show where the warning was created)
-    Found latest release version: v4.0.2
-    Downloading file: geode-cli-v4.0.2-win.zip to: D:\a\grapebot\grapebot\my-epic-geode-cli
-    Downloaded geode-cli-v4.0.2-win.zip (13208330 bytes)
-    Done: D:\a\grapebot\grapebot\my-epic-geode-cli\geode-cli-v4.0.2-win.zip
-Setup
-1s
-Run 7z x "my-epic-geode-cli/*-win.zip" -omy-epic-geode-cli
-    7-Zip 26.06 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-11-06
-    Scanning the drive for archives:
-    1 file, 13208330 bytes (13 MiB)
-    Extracting archive: my-epic-geode-cli\geode-cli-v4.0.2-win.zip
-    --
-    Path = my-epic-geode-cli\geode-cli-v4.0.2-win.zip
-    Type = zip
-    Physical Size = 13208330
-    Everything is Ok
-    Size:       39070072
-    Compressed: 13208330
 Setup Geode SDK
-18s
-Run export CLI_PROFILE="D:\a\grapebot\grapebot/cli-profile"
-  | Done | A new profile named 'GithubActions' has been created
-  | Info | Downloading SDK
-  | Info | Enumerating objects: 63728, done.
-  | Info | Counting objects:   0% (1/1291)
-  | Info | Counting objects:   1% (13/1291)
-  | Info | Counting objects:   2% (26/1291)
-  | Info | Counting objects:   3% (39/1291)
-  | Info | Counting objects:   4% (52/1291)
-  | Info | Counting objects:   5% (65/1291)
-  | Info | Counting objects:   6% (78/1291)
-  Counting objects:   7% (91/1291)
-  | Info | Counting objects:   8% (104/1291)
-  | Info | Counting objects:   9% (117/1291)
-  | Info | Counting objects:  10% (130/1291)
-  Counting objects:  11% (143/1291)
-  | Info | Counting objects:  12% (155/1291)
-  | Info | Counting objects:  13% (168/1291)
-  Counting objects:  14% (181/1291)
-  | Info | Counting objects:  15% (194/1291)
-  | Info | Counting objects:  16% (207/1291)
-  | Info | Counting objects:  17% (220/1291)
-  | Info | Counting objects:  18% (233/1291)
-  | Info | Counting objects:  19% (246/1291)
-  Counting objects:  20% (259/1291)
-  | Info | Counting objects:  21% (272/1291)
-  Counting objects:  22% (285/1291)
-  Counting objects:  23% (297/1291)
-  | Info | Counting objects:  24% (310/1291)
-  | Info | Counting objects:  25% (323/1291)
-  | Info | Counting objects:  26% (336/1291)
-  | Info | Counting objects:  27% (349/1291)
-  | Info | Counting objects:  28% (362/1291)
-  | Info | Counting objects:  29% (375/1291)
-  Counting objects:  30% (388/1291)
-  | Info | Counting objects:  31% (401/1291)
-  | Info | Counting objects:  32% (414/1291)
-  | Info | Counting objects:  33% (427/1291)
-  | Info | Counting objects:  34% (439/1291)
-  Counting objects:  35% (452/1291)
-  | Info | Counting objects:  36% (465/1291)
-  | Info | Counting objects:  37% (478/1291)
-  | Info | Counting objects:  38% (491/1291)
-  Counting objects:  39% (504/1291)
-  Counting objects:  40% (517/1291)
-  | Info | Counting objects:  41% (530/1291)
-  Counting objects:  42% (543/1291)
-  | Info | Counting objects:  43% (556/1291)
-  | Info | Counting objects:  44% (569/1291)
-  Counting objects:  45% (581/1291)
-  | Info | Counting objects:  46% (594/1291)
-  | Info | Counting objects:  47% (607/1291)
-  Counting objects:  48% (620/1291)
-  | Info | Counting objects:  49% (633/1291)
-  Counting objects:  50% (646/1291)
-  | Info | Counting objects:  51% (659/1291)
-  Counting objects:  52% (672/1291)
-  | Info | Counting objects:  53% (685/1291)
-  | Info | Counting objects:  54% (698/1291)
-  Counting objects:  55% (711/1291)
-  | Info | Counting objects:  56% (723/1291)
-  | Info | Counting objects:  57% (736/1291)
-  Counting objects:  58% (749/1291)
-  | Info | Counting objects:  59% (762/1291)
-  Counting objects:  60% (775/1291)
-  | Info | Counting objects:  61% (788/1291)
-  Counting objects:  62% (801/1291)
-  | Info | Counting objects:  63% (814/1291)
-  | Info | Counting objects:  64% (827/1291)
-  Counting objects:  65% (840/1291)
-  | Info | Counting objects:  66% (853/1291)
-  | Info | Counting objects:  67% (865/1291)
-  Counting objects:  68% (878/1291)
-  Counting objects:  69% (891/1291)
-  | Info | Counting objects:  70% (904/1291)
-  | Info | Counting objects:  71% (917/1291)
-  Counting objects:  72% (930/1291)
-  | Info | Counting objects:  73% (943/1291)
-  Counting objects:  74% (956/1291)
-  | Info | Counting objects:  75% (969/1291)
-  | Info | Counting objects:  76% (982/1291)
-  Counting objects:  77% (995/1291)
-  Counting objects:  78% (1007/1291)
-  | Info | Counting objects:  79% (1020/1291)
-  | Info | Counting objects:  80% (1033/1291)
-  | Info | Counting objects:  81% (1046/1291)
-  Counting objects:  82% (1059/1291)
-  | Info | Counting objects:  83% (1072/1291)
-  Counting objects:  84% (1085/1291)
-  | Info | Counting objects:  85% (1098/1291)
-  Counting objects:  86% (1111/1291)
-  | Info | Counting objects:  87% (1124/1291)
-  | Info | Counting objects:  88% (1137/1291)
-  | Info | Counting objects:  89% (1149/1291)
-  | Info | Counting objects:  90% (1162/1291)
-  Counting objects:  91% (1175/1291)
-  | Info | Counting objects:  92% (1188/1291)
-  Counting objects:  93% (1201/1291)
-  | Info | Counting objects:  94% (1214/1291)
-  Counting objects:  95% (1227/1291)
-  | Info | Counting objects:  96% (1240/1291)
-  Counting objects:  97% (1253/1291)
-  | Info | Counting objects:  98% (1266/1291)
-  | Info | Counting objects:  99% (1279/1291)
-  Counting objects: 100% (1291/1291)
-  | Info | Counting objects: 100% (1291/1291), done.
-  | Info | Compressing objects:   0% (1/450)
-  | Info | Compressing objects:   1% (5/450)
-  | Info | Compressing objects:   2% (9/450)
-  | Info | Compressing objects:   3% (14/450)
-  | Info | Compressing objects:   4% (18/450)
-  | Info | Compressing objects:   5% (23/450)
-  | Info | Compressing objects:   6% (27/450)
-  | Info | Compressing objects:   7% (32/450)
-  | Info | Compressing objects:   8% (36/450)
-  | Info | Compressing objects:   9% (41/450)
-  | Info | Compressing objects:  10% (45/450)
-  | Info | Compressing objects:  11% (50/450)
-  | Info | Compressing objects:  12% (54/450)
-  | Info | Compressing objects:  13% (59/450)
-  | Info | Compressing objects:  14% (63/450)
-  | Info | Compressing objects:  15% (68/450)
-  | Info | Compressing objects:  16% (72/450)
-  | Info | Compressing objects:  17% (77/450)
-  | Info | Compressing objects:  18% (81/450)
-  | Info | Compressing objects:  19% (86/450)
-  | Info | Compressing objects:  20% (90/450)
-  | Info | Compressing objects:  21% (95/450)
-  | Info | Compressing objects:  22% (99/450)
-  | Info | Compressing objects:  23% (104/450)
-  | Info | Compressing objects:  24% (108/450)
-  | Info | Compressing objects:  25% (113/450)
-  | Info | Compressing objects:  26% (117/450)
-  | Info | Compressing objects:  27% (122/450)
-  | Info | Compressing objects:  28% (126/450)
-  | Info | Compressing objects:  29% (131/450)
-  | Info | Compressing objects:  30% (135/450)
-  | Info | Compressing objects:  31% (140/450)
-  | Info | Compressing objects:  32% (144/450)
-  | Info | Compressing objects:  33% (149/450)
-  | Info | Compressing objects:  34% (153/450)
-  | Info | Compressing objects:  35% (158/450)
-  | Info | Compressing objects:  36% (162/450)
-  | Info | Compressing objects:  37% (167/450)
-  | Info | Compressing objects:  38% (171/450)
-  | Info | Compressing objects:  39% (176/450)
-  | Info | Compressing objects:  40% (180/450)
-  | Info | Compressing objects:  41% (185/450)
-  | Info | Compressing objects:  42% (189/450)
-  | Info | Compressing objects:  43% (194/450)
-  | Info | Compressing objects:  44% (198/450)
-  | Info | Compressing objects:  45% (203/450)
-  | Info | Compressing objects:  46% (207/450)
-  | Info | Compressing objects:  47% (212/450)
-  | Info | Compressing objects:  48% (216/450)
-  | Info | Compressing objects:  49% (221/450)
-  | Info | Compressing objects:  50% (225/450)
-  | Info | Compressing objects:  51% (230/450)
-  | Info | Compressing objects:  52% (234/450)
-  | Info | Compressing objects:  53% (239/450)
-  | Info | Compressing objects:  54% (243/450)
-  | Info | Compressing objects:  55% (248/450)
-  | Info | Compressing objects:  56% (252/450)
-  | Info | Compressing objects:  57% (257/450)
-  | Info | Compressing objects:  58% (261/450)
-  | Info | Compressing objects:  59% (266/450)
-  | Info | Compressing objects:  60% (270/450)
-  | Info | Compressing objects:  61% (275/450)
-  | Info | Compressing objects:  62% (279/450)
-  | Info | Compressing objects:  63% (284/450)
-  | Info | Compressing objects:  64% (288/450)
-  | Info | Compressing objects:  65% (293/450)
-  | Info | Compressing objects:  66% (297/450)
-  | Info | Compressing objects:  67% (302/450)
-  | Info | Compressing objects:  68% (306/450)
-  | Info | Compressing objects:  69% (311/450)
-  | Info | Compressing objects:  70% (315/450)
-  | Info | Compressing objects:  71% (320/450)
-  | Info | Compressing objects:  72% (324/450)
-  | Info | Compressing objects:  73% (329/450)
-  | Info | Compressing objects:  74% (333/450)
-  | Info | Compressing objects:  75% (338/450)
-  | Info | Compressing objects:  76% (342/450)
-  | Info | Compressing objects:  77% (347/450)
-  | Info | Compressing objects:  78% (351/450)
-  | Info | Compressing objects:  79% (356/450)
-  | Info | Compressing objects:  80% (360/450)
-  | Info | Compressing objects:  81% (365/450)
-  | Info | Compressing objects:  82% (369/450)
-  | Info | Compressing objects:  83% (374/450)
-  | Info | Compressing objects:  84% (378/450)
-  | Info | Compressing objects:  85% (383/450)
-  | Info | Compressing objects:  86% (387/450)
-  | Info | Compressing objects:  87% (392/450)
-  | Info | Compressing objects:  88% (396/450)
-  | Info | Compressing objects:  89% (401/450)
-  | Info | Compressing objects:  90% (405/450)
-  | Info | Compressing objects:  91% (410/450)
-  | Info | Compressing objects:  92% (414/450)
-  | Info | Compressing objects:  93% (419/450)
-  | Info | Compressing objects:  94% (423/450)
-  | Info | Compressing objects:  95% (428/450)
-  | Info | Compressing objects:  96% (432/450)
-  | Info | Compressing objects:  97% (437/450)
-  | Info | Compressing objects:  98% (441/450)
-  | Info | Compressing objects:  99% (446/450)
-  | Info | Compressing objects: 100% (450/450)
-  | Info | Compressing objects: 100% (450/450), done.
-  | Info | Total 63728 (delta 1124), reused 847 (delta 841), pack-reused 62437 (from 3)
-  | Info | Set GEODE_SDK environment variable automatically
-  | Info | Updating head
-  | Done | Updated head to v6.0.0-beta.1
-  | Done | Successfully installed SDK
-  | Info | Please restart your command line to have the GEODE_SDK enviroment variable set.
-  | Info | Use `geode sdk install-binaries` to install pre-built binaries
-  Updating to version 6.0.0-beta.1 from ./mod.json
-  | Info | Switching to 6.0.0-beta.1
-  | Info | Updating SDK
-  | Info | Updating head
-  | Info | Switched to 6.0.0-beta.1
-  | Done | Successfully updated SDK.
-  | Info | Installing binaries for 6.0.0-beta.1
-  | Info | Found binaries for platform Windows
-  | Info | Downloading
-  | Done | Binaries installed
+16s
 Run CMake and build
-1m 1s
+1m 15s
 Run mkdir -p $HOME/.cache
-    
-  -- The C compiler identification is Clang 20.1.8 with GNU-like command-line
-  -- The CXX compiler identification is Clang 20.1.8 with GNU-like command-line
+  -- The C compiler identification is MSVC 19.52.37029.0
+  -- The CXX compiler identification is MSVC 19.52.37029.0
   -- Detecting C compiler ABI info
   -- Detecting C compiler ABI info - done
-  -- Check for working C compiler: C:/Program Files/LLVM/bin/clang.exe - skipped
+  -- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/18/Enterprise/VC/Tools/MSVC/14.52.37025/bin/Hostx64/x64/cl.exe - skipped
   -- Detecting C compile features
   -- Detecting C compile features - done
   -- Detecting CXX compiler ABI info
   -- Detecting CXX compiler ABI info - done
-  -- Check for working CXX compiler: C:/Program Files/LLVM/bin/clang++.exe - skipped
+  -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/18/Enterprise/VC/Tools/MSVC/14.52.37025/bin/Hostx64/x64/cl.exe - skipped
   -- Detecting CXX compile features
   -- Detecting CXX compile features - done
   -- Windows build without the pc overlay; using the standard UI
@@ -315,10 +35,10 @@ Run mkdir -p $HOME/.cache
   -- Version: 6.0.0, tag: beta.1 (type: Beta, number: 1)
   -- Using D:/a/grapebot/grapebot/bindings-repo for bindings repo
   -- Looking for ccache/sccache
-  Using sccache with Clang, PCH will be enabled.
   -- Looking for ccache/sccache - detecting variant
+  Using sccache with MSVC, PCH will be disabled.
   -- Looking for ccache/sccache - detected sccache
-  -- Pre-compiled headers - ON
+  -- Pre-compiled headers - OFF
   -- Found Geode CLI: D:/a/grapebot/grapebot/my-epic-geode-cli/geode.exe (version 4.0.2)
   -- CPM: Adding package result@1668 (1668d22 to D:/a/grapebot/grapebot/cpm-cache/result/9983)
   -- CPM: Adding package json@4.1.0 (v4.1.0 to D:/a/grapebot/grapebot/cpm-cache/json/f358)
@@ -326,15 +46,13 @@ Run mkdir -p $HOME/.cache
   -- CPM: Adding package fmt@12.2.0 (12.2.0 to D:/a/grapebot/grapebot/cpm-cache/fmt/73a7)
   -- {fmt} version: 12.2.0
   -- Build type: Release
-  -- Performing Test HAS_NULLPTR_WARNING
-  -- Performing Test HAS_NULLPTR_WARNING - Success
   -- CPM: Adding package asp2@1.6.4 (v1.6.4 to D:/a/grapebot/grapebot/cpm-cache/asp2/9972)
   -- CPM: Adding package arc@1.6.6 (v1.6.6 to D:/a/grapebot/grapebot/cpm-cache/arc/e5fc)
   -- Arc features: time, net, signal, iocp
   -- CPM: Adding package qsox@1.0.1 (v1.0.1 to D:/a/grapebot/grapebot/cpm-cache/qsox/f5ee)
   -- CPM: Adding package TulipHook@ (fb5e02c to D:/a/grapebot/grapebot/cpm-cache/tuliphook/0737)
   -- Performing Test SUPPORTS_W_NO_EVERYTHING
-  -- Performing Test SUPPORTS_W_NO_EVERYTHING - Success
+  -- Performing Test SUPPORTS_W_NO_EVERYTHING - Failed
   -- Downloading Codegen
   Set SKIP_BUILDING_CODEGEN to OFF to force codegen to build locally.
   -- Downloading Codegen - success
@@ -346,19 +64,23 @@ Run mkdir -p $HOME/.cache
   CMake Warning (deprecated) at cpm-cache/zydis/7c9e/CMakeLists.txt:1 (cmake_minimum_required):
     Compatibility with CMake < 3.10 will be removed from a future version of
     CMake.
+  
     Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
     to tell CMake that the project requires at least <min> but has been updated
     to work with policies introduced by <max> or earlier.
   This warning is for project developers.  Use -Wno-author or -Wno-deprecated
   to suppress it.
+  
   CMake Warning (deprecated) at cpm-cache/zydis/7c9e/dependencies/zycore/CMakeLists.txt:5 (cmake_minimum_required):
     Compatibility with CMake < 3.10 will be removed from a future version of
     CMake.
+  
     Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
     to tell CMake that the project requires at least <min> but has been updated
     to work with policies introduced by <max> or earlier.
   This warning is for project developers.  Use -Wno-author or -Wno-deprecated
   to suppress it.
+  
   -- Found Doxygen: C:/Strawberry/c/bin/doxygen.exe (found version "1.10.0") found components: doxygen missing components: dot
   -- CPM: Adding package safetyhook@0 (f44cc070a8340f2f26649553c49533475417304d to D:/a/grapebot/grapebot/cpm-cache/safetyhook/6b89)
   CMake Warning (author) at cpm-cache/safetyhook/6b89/cmake/CPM.cmake:55 (message):
@@ -369,11 +91,14 @@ Run mkdir -p $HOME/.cache
   Call Stack (most recent call first):
     cpm-cache/safetyhook/6b89/CMakeLists.txt:42 (include)
   This warning is for project developers.  Use -Wno-author to suppress it.
+  
   CMake Warning at cpm-cache/cpm/CPM_0.42.1.cmake:390 (message):
     CPM: Requires a newer version of zydis (4.1.0) than currently included (0).
   Call Stack (most recent call first):
     cpm-cache/cpm/CPM_0.42.1.cmake:763 (cpm_check_if_package_already_added)
     cpm-cache/safetyhook/6b89/CMakeLists.txt:47 (CPMAddPackage)
+  
+  
   -- Setting up grape
   -- Mod okhx.grape is compiling for Geode version 6.0.0-beta.1
   -- Mod okhx.grape is compiling for Geometry Dash version 2.2091
@@ -385,92 +110,69 @@ Run mkdir -p $HOME/.cache
   | Info | Dependency 'geode.node-ids' found on the index, installing (version '1.24.0-beta.1')
   | Done | All dependencies resolved
   -- Skipping installing grape
-  -- Configuring done (46.4s)
-  -- Generating done (0.4s)
+  -- Configuring done (48.7s)
+  -- Generating done (0.5s)
   -- Build files have been written to: D:/a/grapebot/grapebot/build
   [0/2] Re-checking globbed directories...
-  [1/188] Building C object _deps/zydis-build/zycore/CMakeFiles/Zycore.dir/src/API/Memory.c.obj
-  [2/188] Building CXX object _deps/fmt-build/CMakeFiles/fmt.dir/src/format.cc.obj
-  FAILED: [code=1] _deps/fmt-build/CMakeFiles/fmt.dir/src/format.cc.obj 
-  C:\Users\runneradmin\.cargo\bin\sccache "C:\Program Files\LLVM\bin\clang++.exe" -D_HAS_ITERATOR_DEBUGGING=0 -ID:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include -O3 -DNDEBUG -std=gnu++23 -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -flto=thin --target=x86_64-pc-windows-msvc -MD -MT _deps/fmt-build/CMakeFiles/fmt.dir/src/format.cc.obj -MF _deps\fmt-build\CMakeFiles\fmt.dir\src\format.cc.obj.d -o _deps/fmt-build/CMakeFiles/fmt.dir/src/format.cc.obj -c D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/src/format.cc
-  In file included from D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/src/format.cc:8:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include\fmt/format-inl.h:19:
-  In file included from C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\algorithm:8:
-  In file included from C:\Program Files\LLVM\lib\clang\20\include\yvals_core.h:17:
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:923:1: error: static assertion failed: error STL1000: Unexpected compiler version, expected Clang 22 or newer.
-    923 | _EMIT_STL_ERROR(STL1000, "Unexpected compiler version, expected Clang 22 or newer.");
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:537:58: note: expanded from macro '_EMIT_STL_ERROR'
-    537 | #define _EMIT_STL_ERROR(NUMBER, MESSAGE)   static_assert(false, "error " #NUMBER ": " MESSAGE)
-        |                                                          ^~~~~
-  1 error generated.
-  [3/188] Building CXX object _deps/fmt-build/CMakeFiles/fmt.dir/src/os.cc.obj
-  FAILED: [code=1] _deps/fmt-build/CMakeFiles/fmt.dir/src/os.cc.obj 
-  C:\Users\runneradmin\.cargo\bin\sccache "C:\Program Files\LLVM\bin\clang++.exe" -D_HAS_ITERATOR_DEBUGGING=0 -ID:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include -O3 -DNDEBUG -std=gnu++23 -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -flto=thin --target=x86_64-pc-windows-msvc -MD -MT _deps/fmt-build/CMakeFiles/fmt.dir/src/os.cc.obj -MF _deps\fmt-build\CMakeFiles\fmt.dir\src\os.cc.obj.d -o _deps/fmt-build/CMakeFiles/fmt.dir/src/os.cc.obj -c D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/src/os.cc
-  In file included from D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/src/os.cc:13:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include\fmt/os.h:11:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include\fmt\format.h:41:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include\fmt\base.h:20:
-  In file included from C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\type_traits:8:
-  In file included from C:\Program Files\LLVM\lib\clang\20\include\yvals_core.h:17:
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:923:1: error: static assertion failed: error STL1000: Unexpected compiler version, expected Clang 22 or newer.
-    923 | _EMIT_STL_ERROR(STL1000, "Unexpected compiler version, expected Clang 22 or newer.");
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:537:58: note: expanded from macro '_EMIT_STL_ERROR'
-    537 | #define _EMIT_STL_ERROR(NUMBER, MESSAGE)   static_assert(false, "error " #NUMBER ": " MESSAGE)
-        |                                                          ^~~~~
-  1 error generated.
-  [4/188] Building C object _deps/zydis-build/zycore/CMakeFiles/Zycore.dir/src/API/Process.c.obj
-  [5/188] Building CXX object _deps/qsox-build/CMakeFiles/qsox.dir/Unity/unity_0_cxx.cxx.obj
-  FAILED: [code=1] _deps/qsox-build/CMakeFiles/qsox.dir/Unity/unity_0_cxx.cxx.obj 
-  C:\Users\runneradmin\.cargo\bin\sccache "C:\Program Files\LLVM\bin\clang++.exe" -DNOMINMAX=1 -D_HAS_ITERATOR_DEBUGGING=0 -ID:/a/grapebot/grapebot/cpm-cache/qsox/f5ee/include -isystem D:/a/grapebot/grapebot/cpm-cache/result/9983/include -isystem D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include -O3 -DNDEBUG -std=gnu++20 -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -flto=thin --target=x86_64-pc-windows-msvc -MD -MT _deps/qsox-build/CMakeFiles/qsox.dir/Unity/unity_0_cxx.cxx.obj -MF _deps\qsox-build\CMakeFiles\qsox.dir\Unity\unity_0_cxx.cxx.obj.d -o _deps/qsox-build/CMakeFiles/qsox.dir/Unity/unity_0_cxx.cxx.obj -c D:/a/grapebot/grapebot/build/_deps/qsox-build/CMakeFiles/qsox.dir/Unity/unity_0_cxx.cxx
-  In file included from D:/a/grapebot/grapebot/build/_deps/qsox-build/CMakeFiles/qsox.dir/Unity/unity_0_cxx.cxx:4:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/qsox/f5ee/src/BaseSocket.cpp:1:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/qsox/f5ee/include\qsox/BaseSocket.hpp:4:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/qsox/f5ee/include\qsox\SocketAddress.hpp:3:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/qsox/f5ee/include\qsox\Error.hpp:3:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/result/9983/include\Geode/Result.hpp:4:
-  In file included from C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\concepts:8:
-  In file included from C:\Program Files\LLVM\lib\clang\20\include\yvals_core.h:17:
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:923:1: error: static assertion failed: error STL1000: Unexpected compiler version, expected Clang 22 or newer.
-    923 | _EMIT_STL_ERROR(STL1000, "Unexpected compiler version, expected Clang 22 or newer.");
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:537:58: note: expanded from macro '_EMIT_STL_ERROR'
-    537 | #define _EMIT_STL_ERROR(NUMBER, MESSAGE)   static_assert(false, "error " #NUMBER ": " MESSAGE)
-        |                                                          ^~~~~
-  1 error generated.
-  [6/188] Building CXX object _deps/asp2-build/CMakeFiles/asp.dir/Unity/unity_0_cxx.cxx.obj
-  FAILED: [code=1] _deps/asp2-build/CMakeFiles/asp.dir/Unity/unity_0_cxx.cxx.obj 
-  C:\Users\runneradmin\.cargo\bin\sccache "C:\Program Files\LLVM\bin\clang++.exe" -DNOMINMAX=1 -D_HAS_ITERATOR_DEBUGGING=0 -ID:/a/grapebot/grapebot/cpm-cache/asp2/9972/include -isystem D:/a/grapebot/grapebot/cpm-cache/result/9983/include -isystem D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include -isystem D:/a/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include -O3 -DNDEBUG -std=gnu++23 -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -flto=thin --target=x86_64-pc-windows-msvc -MD -MT _deps/asp2-build/CMakeFiles/asp.dir/Unity/unity_0_cxx.cxx.obj -MF _deps\asp2-build\CMakeFiles\asp.dir\Unity\unity_0_cxx.cxx.obj.d -o _deps/asp2-build/CMakeFiles/asp.dir/Unity/unity_0_cxx.cxx.obj -c D:/a/grapebot/grapebot/build/_deps/asp2-build/CMakeFiles/asp.dir/Unity/unity_0_cxx.cxx
-  In file included from D:/a/grapebot/grapebot/build/_deps/asp2-build/CMakeFiles/asp.dir/Unity/unity_0_cxx.cxx:4:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/asp2/9972/src/Log.cpp:1:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/asp2/9972/include\asp/Log.hpp:4:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/asp2/9972/include\asp\detail/Function.hpp:2:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include\std23/move_only_function.h:4:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include\std23\__functional_base.h:4:
-  In file included from C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\functional:8:
-  In file included from C:\Program Files\LLVM\lib\clang\20\include\yvals_core.h:17:
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:923:1: error: static assertion failed: error STL1000: Unexpected compiler version, expected Clang 22 or newer.
-    923 | _EMIT_STL_ERROR(STL1000, "Unexpected compiler version, expected Clang 22 or newer.");
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:537:58: note: expanded from macro '_EMIT_STL_ERROR'
-    537 | #define _EMIT_STL_ERROR(NUMBER, MESSAGE)   static_assert(false, "error " #NUMBER ": " MESSAGE)
-        |                                                          ^~~~~
-  1 error generated.
-  [7/188] Building CXX object _deps/arc-build/CMakeFiles/arc.dir/Unity/unity_0_cxx.cxx.obj
-  FAILED: [code=1] _deps/arc-build/CMakeFiles/arc.dir/Unity/unity_0_cxx.cxx.obj 
-  C:\Users\runneradmin\.cargo\bin\sccache "C:\Program Files\LLVM\bin\clang++.exe" -DARC_FEATURE_IOCP=1 -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DNOMINMAX -D_HAS_ITERATOR_DEBUGGING=0 -ID:/a/grapebot/grapebot/cpm-cache/arc/e5fc/include -isystem D:/a/grapebot/grapebot/cpm-cache/asp2/9972/include -isystem D:/a/grapebot/grapebot/cpm-cache/result/9983/include -isystem D:/a/grapebot/grapebot/cpm-cache/fmt/73a7/include -isystem D:/a/grapebot/grapebot/cpm-cache/nontype_functional/aaa0/include -isystem D:/a/grapebot/grapebot/cpm-cache/qsox/f5ee/include -O3 -DNDEBUG -std=gnu++23 -D_DLL -D_MT -Xclang --dependent-lib=msvcrt -flto=thin --target=x86_64-pc-windows-msvc -Wno-invalid-offsetof -MD -MT _deps/arc-build/CMakeFiles/arc.dir/Unity/unity_0_cxx.cxx.obj -MF _deps\arc-build\CMakeFiles\arc.dir\Unity\unity_0_cxx.cxx.obj.d -o _deps/arc-build/CMakeFiles/arc.dir/Unity/unity_0_cxx.cxx.obj -c D:/a/grapebot/grapebot/build/_deps/arc-build/CMakeFiles/arc.dir/Unity/unity_0_cxx.cxx
-  In file included from D:/a/grapebot/grapebot/build/_deps/arc-build/CMakeFiles/arc.dir/Unity/unity_0_cxx.cxx:4:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/arc/e5fc/src/Util.cpp:1:
-  In file included from D:/a/grapebot/grapebot/cpm-cache/arc/e5fc/include\arc/util/Random.hpp:3:
-  In file included from C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\array:8:
-  In file included from C:\Program Files\LLVM\lib\clang\20\include\yvals_core.h:17:
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:923:1: error: static assertion failed: error STL1000: Unexpected compiler version, expected Clang 22 or newer.
-    923 | _EMIT_STL_ERROR(STL1000, "Unexpected compiler version, expected Clang 22 or newer.");
-        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\include\yvals_core.h:537:58: note: expanded from macro '_EMIT_STL_ERROR'
-    537 | #define _EMIT_STL_ERROR(NUMBER, MESSAGE)   static_assert(false, "error " #NUMBER ": " MESSAGE)
-        |                                                          ^~~~~
-  1 error generated.
+  [1/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Memory.c.obj
+  [2/187] Building CXX object _deps\fmt-build\CMakeFiles\fmt.dir\src\os.cc.obj
+  [3/187] Building CXX object _deps\fmt-build\CMakeFiles\fmt.dir\src\format.cc.obj
+  [4/187] Linking CXX static library _deps\fmt-build\fmt.lib
+  [5/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Process.c.obj
+  [6/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Synchronization.c.obj
+  [7/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Terminal.c.obj
+  [8/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Thread.c.obj
+  [9/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Allocator.c.obj
+  [10/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\ArgParse.c.obj
+  [11/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Bitset.c.obj
+  [12/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Format.c.obj
+  [13/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\List.c.obj
+  [14/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\String.c.obj
+  [15/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Vector.c.obj
+  [16/187] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Zycore.c.obj
+  [17/187] Building CXX object _deps\qsox-build\CMakeFiles\qsox.dir\Unity\unity_0_cxx.cxx.obj
+  [18/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\MetaInfo.c.obj
+  [19/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Mnemonic.c.obj
+  [20/187] Linking CXX static library _deps\qsox-build\qsox.lib
+  [21/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Register.c.obj
+  [22/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\String.c.obj
+  [23/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Zydis.c.obj
+  [24/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Utils.c.obj
+  [25/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Decoder.c.obj
+  [26/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\SharedData.c.obj
+  [27/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\DecoderData.c.obj
+  [28/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Encoder.c.obj
+  [29/187] Building CXX object _deps\asp2-build\CMakeFiles\asp.dir\Unity\unity_0_cxx.cxx.obj
+  [30/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Disassembler.c.obj
+  [31/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Formatter.c.obj
+  [32/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\FormatterBuffer.c.obj
+  [33/187] Linking CXX static library _deps\asp2-build\asp.lib
+  [34/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\EncoderData.c.obj
+  [35/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\FormatterATT.c.obj
+  [36/187] Linking C static library _deps\zydis-build\zycore\Zycore.lib
+  [37/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\FormatterBase.c.obj
+  [38/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\FormatterIntel.c.obj
+  [39/187] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Segment.c.obj
+  [40/187] Building CXX object _deps\arc-build\CMakeFiles\arc.dir\Unity\unity_0_cxx.cxx.obj
+  [41/187] Linking C static library _deps\zydis-build\Zydis.lib
+  [42/187] Linking CXX static library _deps\arc-build\arc.lib
+  [43/187] Building CXX object _deps\safetyhook-build\src\CMakeFiles\safetyhook.dir\easy.cpp.obj
+  [44/187] Building CXX object _deps\safetyhook-build\src\CMakeFiles\safetyhook.dir\allocator.cpp.obj
+  [45/187] Building CXX object _deps\safetyhook-build\src\CMakeFiles\safetyhook.dir\os.linux.cpp.obj
+  [46/187] Building CXX object _deps\safetyhook-build\src\CMakeFiles\safetyhook.dir\inline_hook.cpp.obj
+  [47/187] Building CXX object _deps\safetyhook-build\src\CMakeFiles\safetyhook.dir\mid_hook.cpp.obj
+  [48/187] Running Codegen
+  [49/187] Building CXX object _deps\safetyhook-build\src\CMakeFiles\safetyhook.dir\utility.cpp.obj
+  [50/187] Building CXX object bindings\CMakeFiles\GeodeBindings.dir\Unity\unity_17_cxx.cxx.obj
+  FAILED: [code=2] bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_17_cxx.cxx.obj 
+  C:\Users\runneradmin\.cargo\bin\sccache "C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\bin\Hostx64\x64\cl.exe"  /nologo /TP -DARC_FEATURE_IOCP=1 -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DGEODE_COMP_GD_VERSION=22091 -DNOMINMAX -D_HAS_ITERATOR_DEBUGGING=0 -ID:\a\grapebot\grapebot\geode-sdk-clone\loader\include -ID:\a\grapebot\grapebot\geode-sdk-clone\loader\include\Geode\cocos\include -ID:\a\grapebot\grapebot\geode-sdk-clone\loader\include\Geode\cocos\extensions -ID:\a\grapebot\grapebot\geode-sdk-clone\loader\include\Geode\fmod -external:ID:\a\grapebot\grapebot\build\bindings\bindings -external:ID:\a\grapebot\grapebot\bindings-repo\bindings\include -external:ID:\a\grapebot\grapebot\cpm-cache\fmt\73a7\include -external:ID:\a\grapebot\grapebot\cpm-cache\tuliphook\0737\include -external:ID:\a\grapebot\grapebot\cpm-cache\result\9983\include -external:ID:\a\grapebot\grapebot\cpm-cache\json\f358\include -external:ID:\a\grapebot\grapebot\cpm-cache\nontype_functional\aaa0\include -external:ID:\a\grapebot\grapebot\cpm-cache\asp2\9972\include -external:ID:\a\grapebot\grapebot\cpm-cache\arc\e5fc\include -external:ID:\a\grapebot\grapebot\cpm-cache\qsox\f5ee\include -external:W0 /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++23 -MD /GL /bigobj -Wno-overloaded-virtual -Wno-unused-variable /utf-8 /showIncludes /Fobindings\CMakeFiles\GeodeBindings.dir\Unity\unity_17_cxx.cxx.obj /Fdbindings\CMakeFiles\GeodeBindings.dir\GeodeBindings.pdb /FS -c D:\a\grapebot\grapebot\build\bindings\CMakeFiles\GeodeBindings.dir\Unity\unity_17_cxx.cxx
+  cl : Command line error D8021 : invalid numeric argument '/Wno-overloaded-virtual'
+  [51/187] Building CXX object _deps\safetyhook-build\src\CMakeFiles\safetyhook.dir\vmt_hook.cpp.obj
+  [52/187] Building CXX object bindings\CMakeFiles\GeodeBindings.dir\Unity\unity_16_cxx.cxx.obj
+  FAILED: [code=2] bindings/CMakeFiles/GeodeBindings.dir/Unity/unity_16_cxx.cxx.obj 
+  C:\Users\runneradmin\.cargo\bin\sccache "C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.52.37025\bin\Hostx64\x64\cl.exe"  /nologo /TP -DARC_FEATURE_IOCP=1 -DARC_FEATURE_NET=1 -DARC_FEATURE_SIGNAL=1 -DARC_FEATURE_TIME=1 -DGEODE_COMP_GD_VERSION=22091 -DNOMINMAX -D_HAS_ITERATOR_DEBUGGING=0 -ID:\a\grapebot\grapebot\geode-sdk-clone\loader\include -ID:\a\grapebot\grapebot\geode-sdk-clone\loader\include\Geode\cocos\include -ID:\a\grapebot\grapebot\geode-sdk-clone\loader\include\Geode\cocos\extensions -ID:\a\grapebot\grapebot\geode-sdk-clone\loader\include\Geode\fmod -external:ID:\a\grapebot\grapebot\build\bindings\bindings -external:ID:\a\grapebot\grapebot\bindings-repo\bindings\include -external:ID:\a\grapebot\grapebot\cpm-cache\fmt\73a7\include -external:ID:\a\grapebot\grapebot\cpm-cache\tuliphook\0737\include -external:ID:\a\grapebot\grapebot\cpm-cache\result\9983\include -external:ID:\a\grapebot\grapebot\cpm-cache\json\f358\include -external:ID:\a\grapebot\grapebot\cpm-cache\nontype_functional\aaa0\include -external:ID:\a\grapebot\grapebot\cpm-cache\asp2\9972\include -external:ID:\a\grapebot\grapebot\cpm-cache\arc\e5fc\include -external:ID:\a\grapebot\grapebot\cpm-cache\qsox\f5ee\include -external:W0 /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++23 -MD /GL /bigobj -Wno-overloaded-virtual -Wno-unused-variable /utf-8 /showIncludes /Fobindings\CMakeFiles\GeodeBindings.dir\Unity\unity_16_cxx.cxx.obj /Fdbindings\CMakeFiles\GeodeBindings.dir\GeodeBindings.pdb /FS -c D:\a\grapebot\grapebot\build\bindings\CMakeFiles\GeodeBindings.dir\Unity\unity_16_cxx.cxx
+  cl : Command line error D8021 : invalid numeric argument '/Wno-overloaded-virtual'
+  [53/187] Building CXX object _deps\safetyhook-build\src\CMakeFiles\safetyhook.dir\os.windows.cpp.obj
+  [54/187] Building CXX object CMakeFiles\grape_atomic_file_test.dir\tests\atomic_file.cpp.obj
+  [55/187] Building CXX object CMakeFiles\grape_keybind_test.dir\tests\keybind.cpp.obj
   ninja: build stopped: subcommand failed.
-  Error: Process completed with exit code 1.
