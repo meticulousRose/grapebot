@@ -46,6 +46,12 @@ jobs:
     name: Build ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
 
+    # The Geode build action already drives sccache as the compiler launcher.
+    # Storing the objects in the Actions cache keeps repeat Windows builds to
+    # the few translation units that actually changed.
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+
     steps:
     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
@@ -93,7 +99,7 @@ jobs:
         sdk: given
         combine: true
         target: ${{ matrix.config.target }}
-        configure-args: ${{ runner.os == 'Windows' && steps.msvc.outputs.ok == '1' && '-DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl' || '' }}
+        configure-args: ${{ runner.os == 'Windows' && steps.msvc.outputs.ok == '1' && '-DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF' || '' }}
 
   package:
     name: Package Geode Mod
