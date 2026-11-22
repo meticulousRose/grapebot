@@ -234,7 +234,10 @@ set_source_files_properties(src/oxorany/oxorany.cpp PROPERTIES
     COMPILE_OPTIONS "$<$<CXX_COMPILER_ID:MSVC>:/w>$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>"
 )
 
-if (NOT GRAPE_MOBILE)
+# macOS: Grape's gl.hpp provides the GL symbols for the imgui backends.
+# Windows: imgui's own embedded loader is self-contained and does not need
+# the custom gl.hpp (which has no Windows branch).
+if (APPLE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         IMGUI_IMPL_OPENGL_LOADER_CUSTOM
     )
