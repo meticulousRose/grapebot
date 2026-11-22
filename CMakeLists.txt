@@ -19,7 +19,8 @@ set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 include(CTest)
 
 if (WIN32 AND NOT GRAPE_PC)
-    message(FATAL_ERROR "Configure Windows builds from the pc directory.")
+    message(STATUS "Windows build without the pc overlay; using the standard UI")
+    set(GRAPE_PC OFF)
 endif()
 
 if (APPLE)

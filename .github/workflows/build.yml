@@ -42,7 +42,6 @@ jobs:
         - name: Windows
           os: windows-latest
           target: Win64
-          path: pc
 
     name: Build ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
@@ -50,10 +49,7 @@ jobs:
     steps:
     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-    # Windows is built from the private pc/ configuration; the step skips
-    # until that directory exists in this repository.
     - name: Build Mod
-      if: ${{ matrix.config.name != 'Windows' || hashFiles('pc/CMakeLists.txt') != '' }}
       uses: geode-sdk/build-geode-mod@963ac394ad1773b6ea5b0f96aade52a44c6a4770
       with:
         bindings: geode-sdk/bindings
@@ -61,7 +57,6 @@ jobs:
         sdk: given
         combine: true
         target: ${{ matrix.config.target }}
-        path: ${{ matrix.config.path || './' }}
 
   package:
     name: Package Geode Mod
