@@ -49,31 +49,51 @@ jobs:
     steps:
     - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-    # windows-latest pairs MSVC STL 14.52 (requires Clang 22+) with the
-    # standalone LLVM 20 from the runner image. Use the Clang 22 bundled
-    # with Visual Studio instead, via a spaceless junction path.
-    - name: Locate VS-bundled Clang
-      id: vsclang
+    # The action defaults to the runner's standalone clang, whose version is
+    # older than the MSVC STL on this image requires. Switch the build to the
+    # real MSVC (cl) by exporting the vcvars64 environment.
+    - name: Set up MSVC environment
+      id: msvc
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        $clang = Get-ChildItem "C:\Program Files\Microsoft Visual Studio" -Recurse -Filter clang++.exe |
-          Where-Object { $_.FullName -match 'Llvm\\x64\\bin' } |
-          Sort-Object FullName -Descending | Select-Object -First 1
-        if ($clang) {
-          New-Item -ItemType Junction -Path "C:\grape-clang" -Target (Split-Path $clang.FullName -Parent) | Out-Null
-          "vsclang=C:/grape-clang/bin/clang++.exe" >> $env:GITHUB_OUTPUT
+        $vsRoot = "C:\Program Files\Microsoft Visual Studio"
+        $vcvars = Get-ChildItem "$vsRoot" -Recurse -Filter vcvars64.bat |
+          Where-Object { $_.FullName -match 'VC\\Auxiliary\\Build' } |
+          Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
+        if (-not $vcvars) { throw "vcvars64.bat not found" }
+
+        $dump = cmd /c "`"$vcvars`" >nul && set"
+        $seen = @{}
+        foreach ($line in $dump) {
+          if ($line -match '^([^=]+)=(.*)$') {
+            $name = $Matches[1]
+            $value = $Matches[2]
+            if ($name -in @('PATH', 'INCLUDE', 'LIB', 'LIBPATH', 'WindowsSdkDir',
+                            'WindowsSDKVersion', 'VCINSTALLDIR', 'VCToolsInstallDir',
+                            'VisualStudioVersion', 'VSCMD_ARG_TGT_ARCH',
+                            'ExtensionSdkDir', 'UCRTContentRoot', ' UniversalCRTSdkDir')) {
+              if (-not $seen.ContainsKey($name)) {
+                "$name=$value" >> $env:GITHUB_ENV
+                $seen[$name] = $true
+              }
+            }
+          }
         }
+        "ok=1" >> $env:GITHUB_OUTPUT
 
     - name: Build Mod
       uses: geode-sdk/build-geode-mod@963ac394ad1773b6ea5b0f96aade52a44c6a4770
+      env:
+        CC: cl
+        CXX: cl
       with:
         bindings: geode-sdk/bindings
         bindings-ref: main
         sdk: given
         combine: true
         target: ${{ matrix.config.target }}
-        configure-args: ${{ runner.os == 'Windows' && steps.vsclang.outputs.vsclang != '' && format('-DCMAKE_C_COMPILER={0} -DCMAKE_CXX_COMPILER={1}', steps.vsclang.outputs.vsclang, steps.vsclang.outputs.vsclang) || '' }}
+        configure-args: ${{ runner.os == 'Windows' && steps.msvc.outputs.ok == '1' && '-DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl' || '' }}
 
   package:
     name: Package Geode Mod
