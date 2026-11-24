@@ -3,6 +3,7 @@
 #include <bit>
 #include <cstdio>
 #include <cstring>
+#include <limits>
 
 using namespace grape::vine;
 
@@ -288,7 +289,7 @@ static int testV3MetaFallback() {
     putState(body, 1, 1, 1, false, true);
 
     const auto nanFile = makeV3(wrapV3(body, 1),
-                                std::bit_cast<uint64_t>(0.0 / 0.0) * 0.0, 5);
+                                std::bit_cast<uint64_t>(std::numeric_limits<double>::quiet_NaN()) * 0.0, 5);
     const auto nanData = decodeSlc(nanFile);
     CHECK(nanData.has_value());
     CHECK(nanData->m_tps == 240.0);

@@ -81,6 +81,31 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
 constexpr int KEY_MW_UP = 0x97;
 constexpr int KEY_MW_DOWN = 0x98;
 
+namespace {
+BOOL CALLBACK findGrapeWindow(HWND window, LPARAM param) {
+    DWORD pid = 0;
+    GetWindowThreadProcessId(window, &pid);
+    if (pid != GetCurrentProcessId() || !IsWindowVisible(window)) return TRUE;
+    if (GetWindow(window, GW_OWNER) != nullptr) return TRUE;
+    *reinterpret_cast<HWND*>(param) = window;
+    return FALSE;
+}
+
+HWND gameWindowFor(void* glfwWindow) {
+    if (glfwWindow) {
+        HDC dc = *reinterpret_cast<HDC*>(
+            reinterpret_cast<uintptr_t>(glfwWindow) + 632);
+        if (dc) {
+            if (HWND window = WindowFromDC(dc); window && IsWindow(window))
+                return window;
+        }
+    }
+    HWND found = nullptr;
+    EnumWindows(&findGrapeWindow, reinterpret_cast<LPARAM>(&found));
+    return found;
+}
+}
+
 LRESULT CALLBACK h_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     bool shiftHeld = GetKeyState(VK_SHIFT) & 0x8000;
     bool ctrlHeld = GetKeyState(VK_CONTROL) & 0x8000;
@@ -330,19 +355,16 @@ void ImGuiHookCtx::init(cocos2d::CCEGLView* view) {
 
 #ifdef GEODE_IS_WINDOWS
     if (m_inited) {
-        if (auto* current = view->getWindow()) {
-            HDC hdc = *reinterpret_cast<HDC*>(
-                reinterpret_cast<uintptr_t>(current) + 632);
-            if (WindowFromDC(hdc) != m_hWnd) {
-                if (GetWindowLongPtr(m_hWnd, GWLP_WNDPROC) ==
-                    reinterpret_cast<LONG_PTR>(h_WndProc)) {
-                    SetWindowLongPtr(m_hWnd, GWLP_WNDPROC,
-                                     reinterpret_cast<LONG_PTR>(m_oWndProc));
-                }
-                ImGui_ImplWin32_Shutdown();
-                ImGui_ImplOpenGL3_Shutdown();
-                m_inited = false;
+        if (auto* current = view->getWindow();
+            gameWindowFor(current) != m_hWnd) {
+            if (GetWindowLongPtr(m_hWnd, GWLP_WNDPROC) ==
+                reinterpret_cast<LONG_PTR>(h_WndProc)) {
+                SetWindowLongPtr(m_hWnd, GWLP_WNDPROC,
+                                 reinterpret_cast<LONG_PTR>(m_oWndProc));
             }
+            ImGui_ImplWin32_Shutdown();
+            ImGui_ImplOpenGL3_Shutdown();
+            m_inited = false;
         }
         if (m_inited) {
             return;
@@ -404,15 +426,14 @@ void ImGuiHookCtx::init(cocos2d::CCEGLView* view) {
     }
 
 #ifdef GEODE_IS_WINDOWS
-    auto* glfwWindow = view->getWindow();
-    HDC hdc =
-        *reinterpret_cast<HDC*>(reinterpret_cast<uintptr_t>(glfwWindow) + 632);
-    m_hWnd = WindowFromDC(hdc);
-
-    DragAcceptFiles(m_hWnd, TRUE);
-
-    m_oWndProc =
-        (WNDPROC)SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)h_WndProc);
+    m_hWnd = gameWindowFor(view->getWindow());
+    if (!m_hWnd) {
+        geode::log::error("Grape: could not find the game window");
+    } else {
+        DragAcceptFiles(m_hWnd, TRUE);
+        m_oWndProc = (WNDPROC)SetWindowLongPtr(m_hWnd, GWLP_WNDPROC,
+                                               (LONG_PTR)h_WndProc);
+    }
 #endif
 
     IMGUI_CHECKVERSION();
@@ -422,7 +443,14 @@ void ImGuiHookCtx::init(cocos2d::CCEGLView* view) {
     ImGui::GetIO().IniFilename = nullptr;
     
 #ifdef GEODE_IS_WINDOWS
-    ImGui_ImplWin32_InitForOpenGL(m_hWnd);
+    if (auto* version =
+            reinterpret_cast<const char*>(glGetString(GL_VERSION)))
+        geode::log::info("Grape: window={:#x} GL={}",
+                         static_cast<unsigned long long>(
+                             reinterpret_cast<uintptr_t>(m_hWnd)),
+                         version);
+    const bool win32Ready = ImGui_ImplWin32_InitForOpenGL(m_hWnd);
+    geode::log::info("Grape: Win32 backend ready={}", win32Ready);
 #endif
 #ifdef GEODE_IS_MACOS
     
@@ -619,6 +647,14 @@ void ImGuiHookCtx::draw() {
     return;
 #endif
 
+#ifdef GEODE_IS_WINDOWS
+    static bool firstDraw = true;
+    if (firstDraw) {
+        firstDraw = false;
+        geode::log::info("Grape: first UI frame");
+    }
+#endif
+
     init(CCEGLView::get());
 
 #ifndef GEODE_IS_WINDOWS
@@ -651,7 +687,18 @@ void ImGuiHookCtx::draw() {
     ImGui_ImplOpenGL3_NewFrame();
 #endif
 #ifdef GEODE_IS_WINDOWS
-    ImGui_ImplWin32_NewFrame();
+    if (m_hWnd) ImGui_ImplWin32_NewFrame();
+    {
+        auto& io = ImGui::GetIO();
+        if (io.DisplaySize.x <= 0.0f || io.DisplaySize.y <= 0.0f) {
+            const auto frameSize = CCEGLView::get()->getFrameSize();
+            io.DisplaySize = ImVec2(frameSize.width, frameSize.height);
+            io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+        }
+        if (io.DeltaTime <= 0.0f)
+            io.DeltaTime =
+                std::max(CCDirector::get()->getDeltaTime(), 1.0f / 1000.0f);
+    }
 #endif
     ImGui::NewFrame();
     GrapeEngine::get()->ui().draw();

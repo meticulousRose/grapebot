@@ -304,7 +304,7 @@ static float getWindowDpi() {
     uint32_t dpi = g_dpiGetter(ImGuiHookCtx::get().m_hWnd);
     float scaling = (float)dpi / 96.0;
 
-    return scaling;
+    return scaling > 0.0f ? scaling : 1.0f;
 }
 #else
 static float getWindowDpi() { return 1.0f; }
@@ -1707,6 +1707,7 @@ void UIManager::draw() {
 
     slui::smooth_window_moves();
     cfg.uiScale = m_state.m_uiScale->inner() * getWindowDpi();
+    if (cfg.uiScale < 0.1f) cfg.uiScale = 1.0f;
     ImGui::GetIO().FontGlobalScale = cfg.uiScale;
     cfg.fitWindowToContent = GrapeSettings::get()->fitMenuToContent;
     static constexpr float tabHeights[] = {445, 500, 500, 410, 500, 500, 530, 530};

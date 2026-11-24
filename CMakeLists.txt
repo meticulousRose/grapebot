@@ -19,7 +19,8 @@ set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 include(CTest)
 
 if (WIN32 AND NOT GRAPE_PC)
-    message(FATAL_ERROR "Configure Windows builds from the pc directory.")
+    message(STATUS "Windows build without the pc overlay; using the standard UI")
+    set(GRAPE_PC OFF)
 endif()
 
 if (APPLE)
@@ -233,14 +234,17 @@ set_source_files_properties(src/oxorany/oxorany.cpp PROPERTIES
     COMPILE_OPTIONS "$<$<CXX_COMPILER_ID:MSVC>:/w>$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-w>"
 )
 
-if (NOT GRAPE_MOBILE)
+# macOS: Grape's gl.hpp provides the GL symbols for the imgui backends.
+# Windows: imgui's own embedded loader is self-contained and does not need
+# the custom gl.hpp (which has no Windows branch).
+if (APPLE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         IMGUI_IMPL_OPENGL_LOADER_CUSTOM
     )
 endif()
 
 
-if (GRAPE_MOBILE OR GRAPE_PC OR APPLE)
+if (GRAPE_MOBILE OR GRAPE_PC OR APPLE OR WIN32)
     include(FetchContent)
     FetchContent_Declare(grape_lua
         URL https://www.lua.org/ftp/lua-5.4.8.tar.gz
@@ -318,7 +322,9 @@ endif()
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} dbghelp pdh)
 endif()
-target_compile_options(GeodeBindings PRIVATE -Wno-overloaded-virtual -Wno-unused-variable)
+if (NOT WIN32)
+    target_compile_options(GeodeBindings PRIVATE -Wno-overloaded-virtual -Wno-unused-variable)
+endif()
 
 if(GRAPE_PC)
     if(EXISTS "${GRAPE_PC_DIR}/license-public-key.hex")
@@ -526,10 +532,14 @@ if (BUILD_TESTING AND NOT ANDROID AND NOT APPLE)
     target_include_directories(grape_notifications_test PRIVATE src)
     add_test(NAME grape.notifications COMMAND grape_notifications_test)
 
-    add_executable(grape_gltf_test tests/gltf.cpp)
-    target_include_directories(grape_gltf_test PRIVATE src pc/src)
-    target_link_libraries(grape_gltf_test PRIVATE glaze::glaze)
-    add_test(NAME grape.gltf COMMAND grape_gltf_test)
+    # The GLTF exporter test needs the private pc/ header; only tested when
+    # the pc overlay exists (Windows builds with it).
+    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pc/src/gltf.hpp")
+        add_executable(grape_gltf_test tests/gltf.cpp)
+        target_include_directories(grape_gltf_test PRIVATE src pc/src)
+        target_link_libraries(grape_gltf_test PRIVATE glaze::glaze)
+        add_test(NAME grape.gltf COMMAND grape_gltf_test)
+    endif()
 
     add_executable(grape_vine_slc_test tests/vine_slc.cpp)
     target_include_directories(grape_vine_slc_test PRIVATE src)
